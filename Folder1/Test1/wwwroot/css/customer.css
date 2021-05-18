@@ -1,0 +1,9 @@
+h1{
+    color : red ;
+    opacity: 0.5;
+}
+img{
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+}

@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "dgSpecHash": "sucyuxfXKvB62Kkv1FerO4XQXyWYJ41AU06P1JE8aeWnD4HJJCDjRUSUaYe47p+92OU0+kJuATvIr0nNSMde6Q==",
+  "success": true,
+  "projectFilePath": "/home/cuong/NET CORE/Folder1/Test1/Test1.csproj",
+  "expectedPackageFiles": [
+    "/home/cuong/.nuget/packages/dnsclient/1.4.0/dnsclient.1.4.0.nupkg.sha512",
+    "/home/cuong/.nuget/packages/microsoft.netcore.platforms/2.1.2/microsoft.netcore.platforms.2.1.2.nupkg.sha512",
+    "/home/cuong/.nuget/packages/mongodb.bson/2.12.3/mongodb.bson.2.12.3.nupkg.sha512",
+    "/home/cuong/.nuget/packages/mongodb.driver/2.12.3/mongodb.driver.2.12.3.nupkg.sha512",
+    "/home/cuong/.nuget/packages/mongodb.driver.core/2.12.3/mongodb.driver.core.2.12.3.nupkg.sha512",
+    "/home/cuong/.nuget/packages/mongodb.libmongocrypt/1.2.1/mongodb.libmongocrypt.1.2.1.nupkg.sha512",
+    "/home/cuong/.nuget/packages/sharpcompress/0.23.0/sharpcompress.0.23.0.nupkg.sha512",
+    "/home/cuong/.nuget/packages/system.buffers/4.5.1/system.buffers.4.5.1.nupkg.sha512",
+    "/home/cuong/.nuget/packages/system.runtime.compilerservices.unsafe/5.0.0/system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
+    "/home/cuong/.nuget/packages/system.text.encoding.codepages/4.5.1/system.text.encoding.codepages.4.5.1.nupkg.sha512"
+  ],
+  "logs": []
+}
