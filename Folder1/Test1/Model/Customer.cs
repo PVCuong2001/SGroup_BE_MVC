@@ -21,9 +21,12 @@ namespace Test1.Model
         [DataType(DataType.Date)]
         public DateTime DTB { get; set; }
 
-       
 
-      [BsonElement("Address")]
+        [BsonElement("Gender")]
+        [Required]
+        public int Gender { get; set; }
+
+        [BsonElement("Address")]
         [Required]
         public string Address { get; set; }
 

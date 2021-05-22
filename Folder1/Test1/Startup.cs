@@ -25,6 +25,7 @@ namespace Test1
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<CustomerService>();
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews();
         }
 

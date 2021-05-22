@@ -1,5 +1,4 @@
-@model IEnumerable<Test1.Model.Customer>
-
+@model IEnumerable<Test1.ViewModel.CustomerVM>
 @* @{
     ViewData["Title"] = "Customer Management";
 } *@
@@ -16,7 +15,22 @@
 <p>
     <a asp-action="Create">Add New Customer</a>
 </p>
-<table class="table">
+
+<form asp-route="searchForm" method="get">
+    <div class="searchGroup">
+        <input type ="text" name="searchName" id="idSearch" >
+        <select  class="form-control" name = "orderBy" id="idOrder">
+            <option>Name Asc</option>
+            <option>Name Desc</option>
+            <option>Gender</option>
+            </select>
+        <div class="col-md-offset-2 col-md-10">    
+            <button type="submit" value="Update" class="btn btn-primary">Search</button>    
+        </div>
+    </div>
+</form>
+
+        <table class="table">
     <thead>
         <tr>
             <th>
@@ -31,9 +45,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.DTB)
             </th>
-            @* <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th> *@
+             <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th> 
             <th></th>
         </tr>
     </thead>
@@ -55,19 +69,24 @@
             <td>
                 @Html.DisplayFor(modelItem => item.DTB)
             </td>
-            @* <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td> *@
+            
+             <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td> 
             <td>
                 @* @Html.ActionLink("Edit", "Edit", new { id = item.Id }) | *@
                 <a asp-controller="Customer"
                 asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                @*
                 @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                *@
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<script src="~/js/IndexCustomer.js"></script>
 </body>
 </html>
