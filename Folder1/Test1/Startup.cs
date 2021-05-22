@@ -51,12 +51,15 @@ namespace Test1
 
             app.UseEndpoints(endpoints =>
             {
-                // endpoints.MapControllerRoute(
-                //     name: "customer",
-                //     pattern: "customer/{controller=Home}/{action=Index}/{id?}");
+               
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                
+                endpoints.MapControllerRoute(
+                    name: "customer",
+                    pattern: "{controller=Customer}/{action=Create}");
+               
                 endpoints.MapControllerRoute(
                     name: "secure",
                     pattern: "admin/{controller=Home}/Index/{id?}");

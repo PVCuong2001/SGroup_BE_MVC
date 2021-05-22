@@ -19,9 +19,9 @@ namespace Test1.Service
 
         public List<Customer> Get(string keyWord , string orderBy)
         {
-            FilterDefinition<Customer> filter =null;
+            FilterDefinition<Customer> filter =Builders<Customer>.Filter.Where(cus => true);;
             SortDefinition<Customer> sortDefinition = null;
-            filter = Builders<Customer>.Filter.Where(cus => true);
+           
             if(keyWord !="" && keyWord !=null) {
                 filter &= Builders<Customer>.Filter.Where(x => x.Name.Contains(keyWord));
                 return customers.Find(filter).ToList();
@@ -41,10 +41,10 @@ namespace Test1.Service
         
             return customers.Find(filter).Sort(sortDefinition).ToList();
         }
-        /*public Customer Get(string id)
+        public Customer FindById(string id)
         {
-            return customers.Find(car => car.Id == id).FirstOrDefault();
-        }*/
+            return customers.Find(x => x.Id == id).FirstOrDefault();
+        }
 
         public Customer Create(Customer car)
         {

@@ -15,8 +15,3 @@ window.onload = function() {
     // ...
 }
 
-/*
-window.onunload = () => {
-    // Clear the local storage
-    localStorage.clear()
-}*/

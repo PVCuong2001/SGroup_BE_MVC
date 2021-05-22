@@ -1,5 +1,6 @@
 
-    @model Test1.Model.Customer  
+    @using Test1.ViewModel    
+    @model Test1.ViewModel.CustomerVM  
         
    @* @{
        Layout = null;
@@ -38,8 +39,19 @@
                     @Html.ValidationMessageFor(model => model.DTB, "", new { @class = "text-danger" })    
                 </div>    
             </div>    
+         <div class="form-group">    
+                        @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })    
+                        <div class="col-md-10">    
+                            <select asp-for="Gender"
+                                    class="form-control"
+                                    asp-items="Html.GetEnumSelectList<CustomerVM.GenderEnum>()" value = "Gender">
+                                 <option>Select type ...</option>
+                            </select>
+                            @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })    
+                        </div>    
+        </div>    
         
-            <div class="form-group">    
+        <div class="form-group">    
                 @Html.LabelFor(model => model.ImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })    
                 <div class="col-md-10">    
                     @Html.EditorFor(model => model.ImageUrl, new { htmlAttributes = new { @class = "form-control" } })    
@@ -55,12 +67,10 @@
                 </div>    
             </div>    
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">    
-                @* <input type="submit" value="Cancel"
-                    formaction="/Customer/" formmethod="get" />
-                </div>     *@
-                <button asp-controller="Customer" class="btn btn-primary">Cancel</button>
-            </div>
+                <div class="col-md-offset-2 col-md-10">
+                    <button asp-route="SearchForm" formmethod="get" class="btn btn-primary">Cancel</button>
+                    @*<button asp-controller="Customer" class="btn btn-primary">Cancel</button>*@
+                </div>
         </div>   
          </div>
 </form>

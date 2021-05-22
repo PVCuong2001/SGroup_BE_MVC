@@ -55,23 +55,28 @@ namespace Test1.Controllers
             return View(customerVM);
         }
 
-        // [HttpGet]
-        // public IActionResult Edit(string id){
-        //    Customer customer =  _customerService.Get(id);
-        //     return View (customer);
-        // }
+         [HttpGet]
+         [Route("/Customer/Edit/{id?}")]
+         public IActionResult Edit(string id){
+            Customer customer =  _customerService.FindById(id);
+            CustomerVM customerVm = _mapper.Map<CustomerVM>(customer);
+             return View (customerVm);
+         }
 
 
         [HttpPost]  
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Customer customer)
+        public IActionResult Edit(CustomerVM customerVM)
         {
             if (ModelState.IsValid)
             {
+                Customer customer = new Customer();
+                _mapper.Map(customerVM, customer);
                 _customerService.Update(customer);
-                return RedirectToAction(nameof(Index));
+                return Redirect("/Customer/Search");
             }
-            return View(customer);
+            return View(customerVM);
+         
         }
 
         [HttpGet]
@@ -79,5 +84,7 @@ namespace Test1.Controllers
             _customerService.Remove(id);
               return RedirectToAction(actionName: "Index", controllerName: "Customer");
         }
+
+        
     }
 }

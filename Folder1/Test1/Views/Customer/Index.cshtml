@@ -16,7 +16,7 @@
     <a asp-action="Create">Add New Customer</a>
 </p>
 
-<form asp-route="searchForm" method="get">
+<form asp-route="SearchForm" method="get">
     <div class="searchGroup">
         <input type ="text" name="searchName" id="idSearch" >
         <select  class="form-control" name = "orderBy" id="idOrder">
@@ -77,10 +77,12 @@
                 @* @Html.ActionLink("Edit", "Edit", new { id = item.Id }) | *@
                 <a asp-controller="Customer"
                 asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                @*
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                *@
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                
+                @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+                 <a onclick="return confirm('Are you sure you want to delete')" asp-controller="Customer"
+                                asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }
