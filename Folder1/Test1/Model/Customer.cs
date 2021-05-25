@@ -14,6 +14,10 @@ namespace Test1.Model
         [BsonElement("Name")]
         [Required]
         public string Name { get; set; }
+        
+        [BsonElement("SeoAlias")]
+        [Required]
+        public string SeoAlias { get; set; }
 
         [BsonElement("DTB")]
         [Required]

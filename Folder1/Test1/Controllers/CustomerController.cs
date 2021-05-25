@@ -33,6 +33,7 @@ namespace Test1.Controllers
                 CustomerVM customerVm = _mapper.Map<CustomerVM>(customer);
                 listVM.Add(customerVm);
             }
+            
             return View(listVM);
         }
         [HttpGet]
@@ -54,11 +55,22 @@ namespace Test1.Controllers
             }
             return View(customerVM);
         }
+        
+        [HttpGet]
+        [Route("/Customer/{alias}-c.{id}")]
+        public IActionResult Detail(string id){
+            Console.WriteLine("sadasdasdas");
+            Console.WriteLine(id);
+            Customer customer =  _customerService.FindById(id);
+            CustomerVM customerVm = _mapper.Map<CustomerVM>(customer);
+            return View (customerVm);
+        }
+        
 
          [HttpGet]
          [Route("/Customer/Edit/{id?}")]
          public IActionResult Edit(string id){
-            Customer customer =  _customerService.FindById(id);
+             Customer customer =  _customerService.FindById(id);
             CustomerVM customerVm = _mapper.Map<CustomerVM>(customer);
              return View (customerVm);
          }

@@ -7,6 +7,7 @@ namespace Test1.ViewModel
         
         public string Id { get; set; }
         public string Name { get; set; }
+        public string SeoAlias { get; set; }
         public DateTime DTB { get; set; }
         public GenderEnum Gender { get; set; }
         public string Address { get; set; }

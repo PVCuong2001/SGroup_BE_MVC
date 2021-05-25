@@ -1,0 +1,55 @@
+@using Test1.ViewModel
+@model Test1.ViewModel.CustomerVM
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class ="form-group">
+            @Html.HiddenFor(model=> model.Id)
+        </div> 
+        <div class="form-group">
+            <label asp-for="Name"  class = "control-label col-md-2" } ></label>
+            <div class="col-md-10">    
+                <input asp-for="Name" readonly="true" class = "form-control" >
+            </div>    
+            </div>    
+        
+            <div class="form-group">    
+                <label asp-for="Address"  class = "control-label col-md-2" } ></label>
+                            <div class="col-md-10">    
+                                <input asp-for="Address" readonly="true" class = "form-control" >
+                            </div>   
+            </div>    
+        
+            <div class="form-group">    
+               <label asp-for="DTB"  class = "control-label col-md-2" } ></label>
+                           <div class="col-md-10">    
+                               <input asp-for="DTB" readonly="true" class = "form-control" >
+                           </div>     
+            </div>    
+         <div class="form-group">    
+                         <label asp-for="Gender"  class = "control-label col-md-2" } ></label>
+                        <div class="col-md-10">    
+                              <input asp-for="Gender" readonly="true" class = "form-control" >
+                    
+                        </div>    
+        </div>    
+        
+        <div class="form-group">    
+                 <label asp-for="ImageUrl"  class = "control-label col-md-2" } ></label>
+                                           <div class="col-md-10">    
+                                               <input asp-for="ImageUrl" readonly="true" class = "form-control" >
+                                           </div>    
+            </div>    
+        
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <form>
+                    <button asp-route="SearchForm" formmethod="get" class="btn btn-primary">Go Back</button>
+                    </form>
+                </div>
+            </div> 
+ 

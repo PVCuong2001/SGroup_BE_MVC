@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
+using Test1.Extention;
 using Test1.Model;
 using Test1.ViewModel;
 
@@ -46,25 +47,27 @@ namespace Test1.Service
             return customers.Find(x => x.Id == id).FirstOrDefault();
         }
 
-        public Customer Create(Customer car)
+        public Customer Create(Customer customer)
         {
-            customers.InsertOne(car);
-            return car;
+            customer.SeoAlias = TextHelper.ToUnsignString(customer.Name);
+            customers.InsertOne(customer);
+            return customer;
         }
 
         public void Update(Customer customer)
         {
+            customer.SeoAlias = TextHelper.ToUnsignString(customer.Name);
             customers.ReplaceOne(cus => cus.Id == customer.Id , customer);
         }
 
-        public void Remove(Customer carIn)
+        public void Remove(Customer customer)
         {
-            customers.DeleteOne(car => car.Id == carIn.Id);
+            customers.DeleteOne(cus => cus.Id == customer.Id);
         }
 
         public void Remove(string id)
         {
-            customers.DeleteOne(car => car.Id == id);
+            customers.DeleteOne(cus => cus.Id == id);
         }
     }
 }

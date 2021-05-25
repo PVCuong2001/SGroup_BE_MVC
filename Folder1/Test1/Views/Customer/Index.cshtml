@@ -1,7 +1,7 @@
 @model IEnumerable<Test1.ViewModel.CustomerVM>
-@* @{
+ @{
     ViewData["Title"] = "Customer Management";
-} *@
+} 
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -74,9 +74,11 @@
                 @Html.DisplayFor(modelItem => item.Gender)
             </td> 
             <td>
-                @* @Html.ActionLink("Edit", "Edit", new { id = item.Id }) | *@
+              
                 <a asp-controller="Customer"
-                asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                   asp-action="Edit" asp-route-id="@item.Id" >Edit</a> |
+                
+                <a asp-controller="Customer" asp-action="/@item.SeoAlias-c.@item.Id" methods="get">Detail</a> |
                 
                 @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |
                 

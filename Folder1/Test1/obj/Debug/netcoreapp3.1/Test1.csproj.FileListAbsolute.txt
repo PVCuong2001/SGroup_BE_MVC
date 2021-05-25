@@ -57,3 +57,4 @@
 /home/cuong/NET CORE/Folder1/Test1/obj/Debug/netcoreapp3.1/Razor/Pages/Error/PageNotFound.cshtml.g.cs
 /home/cuong/NET CORE/Folder1/Test1/obj/Debug/netcoreapp3.1/Razor/Views/Home/404.cshtml.g.cs
 /home/cuong/NET CORE/Folder1/Test1/obj/Debug/netcoreapp3.1/Razor/Views/Home/500.cshtml.g.cs
+/home/cuong/NET CORE/Folder1/Test1/obj/Debug/netcoreapp3.1/Razor/Views/Customer/Detail.cshtml.g.cs
