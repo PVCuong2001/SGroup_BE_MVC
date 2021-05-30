@@ -1,0 +1,44 @@
+
+@model Test1.ViewModel.UserVM
+
+@{
+    Layout = null;
+}
+
+  
+<head>
+  <title>Login</title>
+  <link rel = "stylesheet" href ="~/css/Login.css" type="text/css">
+</head>
+<body>
+<div id="container">
+  <div id="left">
+    <h1 id="welcome">Welcome</h1>
+  </div>
+  <div id="right">
+    <h1 id="login">LogIn</h1><br>
+    <form asp-controller="Login" asp-action="CheckLogin" method ="post">
+    <input asp-for="Gmail" id="email" class="client-info">
+    <label asp-for="Gmail"></label>
+    <input asp-for="Password" id="password" class="client-info">
+    <label asp-for="Password"></label>
+    <input type="submit" id="submit" class="client-info" value="Submit">
+    </form>
+    @*
+    <button class="social" id="facebook">connect with facebook</button>
+    <button class="social" id="google">connect with google</button>
+    *@
+    
+    
+  </div>
+</div>
+
+     @if (ViewData["Message"] != null)
+        {
+            <script type="text/javascript">
+                window.onload = function () {
+                    alert("@ViewData["Message"]");
+                };
+            </script>
+        }
+</body>
