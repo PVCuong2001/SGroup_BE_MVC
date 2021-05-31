@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Test1.Model;
 using Test1.Service;
@@ -8,6 +9,7 @@ using Test1.ViewModel;
 
 namespace Test1.Controllers
 {
+    [Authorize]
     public class CustomerController : Controller
     {
         private readonly CustomerService _customerService;

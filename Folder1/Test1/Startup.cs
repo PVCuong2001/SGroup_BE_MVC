@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,13 @@ namespace Test1
             services.AddScoped<CustomerService>();
             services.AddScoped<UserService>();
             services.AddAutoMapper(typeof(Startup));
+            services.AddAuthentication("CookieAuthentication")  
+                .AddCookie("CookieAuthentication", config =>  
+                {  
+                    config.Cookie.Name = "UserLoginCookie";
+                    config.Cookie.MaxAge = new TimeSpan(0,5,0);
+                    config.LoginPath = "/Login/CheckLogin";  
+                });  
             services.AddControllersWithViews();
         }
 
@@ -44,12 +52,12 @@ namespace Test1
                 app.UseHsts();
             }
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
-            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

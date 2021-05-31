@@ -23,9 +23,9 @@ namespace Test1.Service
              
             FilterDefinition<User> filter =Builders<User>.Filter.Where(cus => true);
             if(properties.ContainsKey("Gmail"))
-                filter &= Builders<User>.Filter.Where(x => x.Name.Contains(properties["Password"]));
+                filter &= Builders<User>.Filter.Where(x => x.Gmail.Equals(properties["Gmail"]));
             if(properties.ContainsKey("Password"))
-                filter &= Builders<User>.Filter.Where(x => x.Name.Contains(properties["Password"]));
+                filter &= Builders<User>.Filter.Where(x => x.Password.Equals(properties["Password"]));
             return users.Find(filter).ToList();
         }
 

@@ -1,16 +1,22 @@
 {
   "version": 2,
-  "dgSpecHash": "h3j92bMzQYA5v+Fxj0i3INEHXzT8ZbiSDs7Q1rY3F+4s3MW/ZNcmYOPP4yBCOq8+txpJBWbIaECNmmzM1+MMUg==",
+  "dgSpecHash": "mV2UGjW9yXE9bAMJTCjs0/s9uFxXrIqy1k7QJcNDKJqbxwMN/BApDuQTTP2FSyBB+IJasDyINmmT3HrDa+6tWg==",
   "success": true,
   "projectFilePath": "/home/cuong/NET CORE/Folder1/Test1/Test1.csproj",
   "expectedPackageFiles": [
     "/home/cuong/.nuget/packages/automapper/10.1.1/automapper.10.1.1.nupkg.sha512",
     "/home/cuong/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/8.1.1/automapper.extensions.microsoft.dependencyinjection.8.1.1.nupkg.sha512",
     "/home/cuong/.nuget/packages/dnsclient/1.4.0/dnsclient.1.4.0.nupkg.sha512",
+    "/home/cuong/.nuget/packages/microsoft.aspnetcore.http/2.2.2/microsoft.aspnetcore.http.2.2.2.nupkg.sha512",
+    "/home/cuong/.nuget/packages/microsoft.aspnetcore.http.abstractions/2.2.0/microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
+    "/home/cuong/.nuget/packages/microsoft.aspnetcore.http.features/2.2.0/microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
+    "/home/cuong/.nuget/packages/microsoft.aspnetcore.webutilities/2.2.0/microsoft.aspnetcore.webutilities.2.2.0.nupkg.sha512",
     "/home/cuong/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512",
     "/home/cuong/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/3.0.0/microsoft.extensions.dependencyinjection.abstractions.3.0.0.nupkg.sha512",
+    "/home/cuong/.nuget/packages/microsoft.extensions.objectpool/2.2.0/microsoft.extensions.objectpool.2.2.0.nupkg.sha512",
     "/home/cuong/.nuget/packages/microsoft.extensions.options/3.0.0/microsoft.extensions.options.3.0.0.nupkg.sha512",
     "/home/cuong/.nuget/packages/microsoft.extensions.primitives/3.0.0/microsoft.extensions.primitives.3.0.0.nupkg.sha512",
+    "/home/cuong/.nuget/packages/microsoft.net.http.headers/2.2.0/microsoft.net.http.headers.2.2.0.nupkg.sha512",
     "/home/cuong/.nuget/packages/microsoft.netcore.platforms/2.1.2/microsoft.netcore.platforms.2.1.2.nupkg.sha512",
     "/home/cuong/.nuget/packages/mongodb.bson/2.12.3/mongodb.bson.2.12.3.nupkg.sha512",
     "/home/cuong/.nuget/packages/mongodb.driver/2.12.3/mongodb.driver.2.12.3.nupkg.sha512",
@@ -20,7 +26,8 @@
     "/home/cuong/.nuget/packages/system.buffers/4.5.1/system.buffers.4.5.1.nupkg.sha512",
     "/home/cuong/.nuget/packages/system.reflection.emit/4.7.0/system.reflection.emit.4.7.0.nupkg.sha512",
     "/home/cuong/.nuget/packages/system.runtime.compilerservices.unsafe/5.0.0/system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
-    "/home/cuong/.nuget/packages/system.text.encoding.codepages/4.5.1/system.text.encoding.codepages.4.5.1.nupkg.sha512"
+    "/home/cuong/.nuget/packages/system.text.encoding.codepages/4.5.1/system.text.encoding.codepages.4.5.1.nupkg.sha512",
+    "/home/cuong/.nuget/packages/system.text.encodings.web/4.5.0/system.text.encodings.web.4.5.0.nupkg.sha512"
   ],
   "logs": []
 }
