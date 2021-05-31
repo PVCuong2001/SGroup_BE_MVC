@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Test1.Models;
-
+using Test1.Model;
+using Test1.ViewModel;
 namespace Test1.Controllers
 {
     
