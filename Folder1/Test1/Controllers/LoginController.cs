@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Test1.Model;
 using Test1.Service;
@@ -53,10 +55,18 @@ namespace Test1.Controllers
                         new Claim(ClaimTypes.Email, list[0].Gmail),  
                     };  
   
-                    var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");  
+               //     var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");  
   
-                    var userPrincipal = new ClaimsPrincipal(new[] { grandmaIdentity });  
-                    HttpContext.SignInAsync(userPrincipal); 
+                    var grandmaIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);  
+                    var userPrincipal = new ClaimsPrincipal(new[] { grandmaIdentity });
+                    /*
+                    var authenProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddSeconds(5)
+                    };
+                    */
+                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal); 
                     return Redirect("/Home/Index");
                 }
                 else
@@ -70,7 +80,8 @@ namespace Test1.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            Response.Cookies.Delete("UserLoginCookie");
+         //   Response.Cookies.Delete("UserLoginCookie");
+         HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Redirect("/Home/Index");
         }
     }

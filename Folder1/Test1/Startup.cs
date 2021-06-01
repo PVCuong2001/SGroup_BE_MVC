@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,13 +29,23 @@ namespace Test1
             services.AddScoped<CustomerService>();
             services.AddScoped<UserService>();
             services.AddAutoMapper(typeof(Startup));
+            /*
             services.AddAuthentication("CookieAuthentication")  
                 .AddCookie("CookieAuthentication", config =>  
                 {  
                     config.Cookie.Name = "UserLoginCookie";
                     config.Cookie.MaxAge = new TimeSpan(0,5,0);
-                    config.LoginPath = "/Login/CheckLogin";  
+                    config.LoginPath = "/Login/CheckLogin";
                 });  
+            */
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = "/Login/CheckLogin";
+                options.LogoutPath = "/Login/Logout";
+                options.Cookie.Name = "UserLoginCookie";
+                options.Cookie.MaxAge = new TimeSpan(0, 5, 0);
+                
+            });
             services.AddControllersWithViews();
         }
 
