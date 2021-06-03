@@ -40,7 +40,6 @@ namespace Test1.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CheckLogin(UserVM userVm)
         {
-            
             if (ModelState.IsValid)
             {
                 Dictionary<string, string> properties = new Dictionary<string, string>();
@@ -49,6 +48,12 @@ namespace Test1.Controllers
                 List<User>list = _userService.findByProperty(properties);
                 if (list != null && list.Count!=0)
                 {
+                    if (list[0].ActiveFlag == true)
+                    {
+                        ViewData["Message"] = "Are you kidding me \\n This account has already logined";
+                    }
+                    else
+                    {
                     var userClaims = new List<Claim>()  
                     {  
                         new Claim(ClaimTypes.Name, list[0].Name),  
@@ -68,7 +73,10 @@ namespace Test1.Controllers
                         ExpiresUtc = DateTime.UtcNow.AddSeconds(5)
                     };
                     */
-                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal); 
+                    var temp =HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal);
+                    list[0].ActiveFlag = true;
+                    _userService.updateUser(list[0]);
+                    }
                     return Redirect("/Home/Index");
                 }
                 else
@@ -83,7 +91,15 @@ namespace Test1.Controllers
         public IActionResult Logout()
         {
          //   Response.Cookies.Delete("UserLoginCookie");
+         
+         var cookieValue = HttpContext.Request.Cookies["UserLoginCookie"];
+         ClaimsPrincipal principal = HttpContext.User as ClaimsPrincipal;
+         string idUser = principal.FindFirst(ClaimTypes.Thumbprint).Value;
+         var user = _userService.findById(idUser);
+         user.ActiveFlag = false;
+         _userService.updateUser(user);
          HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+         
             return Redirect("/Home/Index");
         }
     }

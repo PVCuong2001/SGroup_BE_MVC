@@ -39,6 +39,11 @@ namespace Test1.Service
             return false;
         }
 
+        public User findById(string id)
+        {
+            return users.Find(x => x.Id == id).SingleOrDefault();
+        }
+
         public void addUser(User user)
         {
             user.Password = Md5.CreateMD5Hash(user.Password);

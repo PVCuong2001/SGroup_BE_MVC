@@ -27,5 +27,10 @@ namespace Test1.Model
         [DataType(DataType.ImageUrl)]
         [Required]
         public string ImageUrl { get; set; }
+        
+        // true thi dang dang nhap 
+        [BsonElement("ActiveFlag")]
+        [Required]
+        public bool ActiveFlag { get; set; }
     }
 }
