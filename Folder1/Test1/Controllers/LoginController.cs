@@ -29,7 +29,7 @@ namespace Test1.Controllers
             return View();
         }
         */
-
+        
         [HttpGet]
         public IActionResult CheckLogin()
         {
@@ -45,14 +45,16 @@ namespace Test1.Controllers
             {
                 Dictionary<string, string> properties = new Dictionary<string, string>();
                 properties.Add("Gmail",userVm.Gmail);
-                properties.Add("Password",userVm.Password);
+                properties.Add("Password", userVm.Password);
                 List<User>list = _userService.findByProperty(properties);
                 if (list != null && list.Count!=0)
                 {
                     var userClaims = new List<Claim>()  
                     {  
                         new Claim(ClaimTypes.Name, list[0].Name),  
-                        new Claim(ClaimTypes.Email, list[0].Gmail),  
+                        new Claim(ClaimTypes.Email, list[0].Gmail),
+                        new Claim(ClaimTypes.Thumbprint , list[0].Id),
+                        new Claim(ClaimTypes.Uri,list[0].ImageUrl)
                     };  
   
                //     var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");  

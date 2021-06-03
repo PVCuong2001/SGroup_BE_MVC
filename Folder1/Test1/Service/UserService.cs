@@ -9,27 +9,26 @@ namespace Test1.Service
 {
     public class UserService
     {
-                
-         private readonly IMongoCollection<User> users;
+        private readonly IMongoCollection<User> users;
 
-         public UserService(IConfiguration config)
-         {
+        public UserService(IConfiguration config)
+        {
             MongoClient client = new MongoClient(config.GetConnectionString("CustomerManagement"));
             IMongoDatabase database = client.GetDatabase("CustomerManagement");
             users = database.GetCollection<User>("Users");
-         }
-         
-        public List<User> findByProperty(Dictionary<string, string>properties)
+        }
+
+        public List<User> findByProperty(Dictionary<string, string> properties)
         {
-             
-            FilterDefinition<User> filter =Builders<User>.Filter.Where(cus => true);
-            if(properties.ContainsKey("Gmail"))
+            FilterDefinition<User> filter = Builders<User>.Filter.Where(cus => true);
+            if (properties.ContainsKey("Gmail"))
                 filter &= Builders<User>.Filter.Where(x => x.Gmail.Equals(properties["Gmail"]));
             if (properties.ContainsKey("Password"))
             {
                 string Md5pass = Md5.CreateMD5Hash(properties["Password"]);
                 filter &= Builders<User>.Filter.Where(x => x.Password.Equals(Md5pass));
             }
+
             return users.Find(filter).ToList();
         }
 
@@ -48,7 +47,7 @@ namespace Test1.Service
 
         public void updateUser(User user)
         {
-            users.ReplaceOne(x => x.Id == user.Id , user);
+            users.ReplaceOne(x => x.Id == user.Id, user);
         }
     }
 }

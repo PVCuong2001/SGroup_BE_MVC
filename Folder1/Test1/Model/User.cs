@@ -21,5 +21,11 @@ namespace Test1.Model
         [BsonElement("Gmail")]
         [Required]
         public string Gmail { get; set; }
+        
+        [BsonElement("ImageUrl")]
+        [Display(Name = "Photo")]
+        [DataType(DataType.ImageUrl)]
+        [Required]
+        public string ImageUrl { get; set; }
     }
 }

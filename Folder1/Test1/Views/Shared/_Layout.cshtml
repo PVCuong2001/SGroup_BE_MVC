@@ -28,9 +28,7 @@
                     
                     
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Dropdown button
-                        </button>
+                        <img  data-toggle="dropdown" src =@principal.FindFirst(ClaimTypes.Uri).Value style ="width: 30px ;height: 30px ; border-radius: 50%">
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <p class="dropdown-item" >@principal.FindFirst(ClaimTypes.Name).Value</p>
                             <p class="dropdown-item" >@principal.FindFirst(ClaimTypes.Email).Value</p>
