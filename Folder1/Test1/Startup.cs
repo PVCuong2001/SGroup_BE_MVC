@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Test1.Extention.MiddleWare;
 using Test1.Service;
 
 namespace Test1
@@ -65,7 +66,8 @@ namespace Test1
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+          //  app.UseSession();
+            app.UseMiddleware<LoginTwice>();
             app.UseRouting();
             
             app.UseAuthentication();
