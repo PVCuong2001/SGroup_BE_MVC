@@ -1,21 +1,21 @@
 $("#facebook").click(function (){
-    let gmail = $("#gmail").val();
-   let pass = $("#password").val();
+    let gmail = $("#gmail").val().trim();
+   let pass = $("#password").val().trim();
    let url = "/Login/JustTest?gmail="+gmail+"&password="+pass;
+   
    $.ajax({
        url : url ,
        type : "get",
        dataType :"json",
        success : function (response){
-           console.log(response.check +"adasd");
-           if(response.check == false){
-               console.log(response.check +"a111111");
-               alert("failed")
+           if(response.check != ""){
+               alert(response.check);
+           }else{
+               window.location.href="/Home/Index";
            }
+       },
+       error: function () {
+           alert('error');
        }
    })
-/*
-       ?searchName=un&orderBy=Name+Desc
-*/
-    
 });

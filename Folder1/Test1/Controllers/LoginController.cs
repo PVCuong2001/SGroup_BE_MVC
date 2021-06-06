@@ -89,20 +89,53 @@ namespace Test1.Controllers
 
         [HttpGet]
         public IActionResult JustTest(string gmail, string password)
-        {   
-            Console.WriteLine(gmail + password);
+        {
+            string check = "";
+            if (gmail == "" || password == "") check = "F*ck you !!! Fill in the form NOW";
+            Console.WriteLine(gmail +" "+password);
             Dictionary<string, string> properties = new Dictionary<string, string>();
                 properties.Add("Gmail",gmail);
                 properties.Add("Password", password);
                 List<User>list = _userService.findByProperty(properties);
-                if (list.Count != 0)
+                if (list.Count==0)
                 {
-                    return Redirect("/Home/Index");
+                    check = "Account not existed \\n Poor you!!!";
                 }
-                Console.WriteLine("Nooooo");
+                else
+                {
+                    if (list[0].ActiveFlag == true)
+                    {
+                        check = "Are you kidding me !!! This account has already logined";
+                    }
+                    else
+                    {
+                    var userClaims = new List<Claim>()  
+                    {  
+                        new Claim(ClaimTypes.Name, list[0].Name),  
+                        new Claim(ClaimTypes.Email, list[0].Gmail),
+                        new Claim(ClaimTypes.Thumbprint , list[0].Id),
+                        new Claim(ClaimTypes.Uri,list[0].ImageUrl)
+                    };  
+  
+               //     var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");  
+  
+                    var grandmaIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);  
+                    var userPrincipal = new ClaimsPrincipal(new[] { grandmaIdentity });
+                    /*
+                    var authenProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddSeconds(5)
+                    };
+                    */
+                    var temp =HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal);
+                    list[0].ActiveFlag = true;
+                    _userService.updateUser(list[0]);
+                    }
+                }
                 return Json(new
                 {
-                    check =false 
+                    check = check 
                 });
         }
 
