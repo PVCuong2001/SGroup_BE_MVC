@@ -88,6 +88,25 @@ namespace Test1.Controllers
         }
 
         [HttpGet]
+        public IActionResult JustTest(string gmail, string password)
+        {   
+            Console.WriteLine(gmail + password);
+            Dictionary<string, string> properties = new Dictionary<string, string>();
+                properties.Add("Gmail",gmail);
+                properties.Add("Password", password);
+                List<User>list = _userService.findByProperty(properties);
+                if (list.Count != 0)
+                {
+                    return Redirect("/Home/Index");
+                }
+                Console.WriteLine("Nooooo");
+                return Json(new
+                {
+                    check =false 
+                });
+        }
+
+        [HttpGet]
         public IActionResult Logout()
         {
          //   Response.Cookies.Delete("UserLoginCookie");
