@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+     
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Product\AddOrEdit.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Product\Index.cshtml" />
   </ItemGroup>
 
 </Project>

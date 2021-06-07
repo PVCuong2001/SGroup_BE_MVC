@@ -13,8 +13,8 @@ namespace Test1.Service
 
         public CustomerService(IConfiguration config)
         {
-            MongoClient client = new MongoClient(config.GetConnectionString("CustomerManagement"));
-            IMongoDatabase database = client.GetDatabase("CustomerManagement");
+            MongoClient client = new MongoClient(config.GetConnectionString("MongoConnection"));
+            IMongoDatabase database = client.GetDatabase("StoreManagement");
             customers = database.GetCollection<Customer>("Customers");
         }
 

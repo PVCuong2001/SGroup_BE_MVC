@@ -29,6 +29,7 @@ namespace Test1
         {
             services.AddScoped<CustomerService>();
             services.AddScoped<UserService>();
+            services.AddScoped<ProductService>();
             services.AddAutoMapper(typeof(Startup));
             /*
             services.AddAuthentication("CookieAuthentication")  
@@ -66,7 +67,7 @@ namespace Test1
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-          //  app.UseSession();
+       
             app.UseMiddleware<LoginTwice>();
             app.UseRouting();
             
