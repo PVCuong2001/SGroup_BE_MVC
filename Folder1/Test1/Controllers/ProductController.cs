@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Test1.Extention;
 using Test1.Model;
 using Test1.Service;
 using Test1.ViewModel;
@@ -26,13 +27,7 @@ namespace Test1.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            List<ProductVM> listVM = new List<ProductVM>();
-            foreach (Product product in _productService.Get("", ""))
-            {
-                ProductVM productVm = _mapper.Map<ProductVM>(product);
-                listVM.Add(productVm);
-            }
-
+            var listVM = _productService.Get("", "");
             return View(listVM);
         }
         [HttpGet]
@@ -41,7 +36,7 @@ namespace Test1.Controllers
         {
             if (id == "")
             {
-                return View();
+                return View(new ProductVM());
             }
             else
             {
@@ -60,6 +55,7 @@ namespace Test1.Controllers
             {
                 Product product = new Product();
                 _mapper.Map(productVm, product);
+                Console.WriteLine("before update or create");
                 if (productVm.Id == "")
                 {
                     _productService.Create(product);
@@ -68,10 +64,10 @@ namespace Test1.Controllers
                 {
                     _productService.Update(product);
                 }
-
-                return Redirect("/Customer/Search");
+                Console.WriteLine("after update or create");
+                return Json(new {isValid =true , html = RazorHelper.RenderRazorViewToString(this,"_ViewAll",_productService.Get("",""))});
             }
-            return View(productVm);
+           return Json(new {isValid =false , html = RazorHelper.RenderRazorViewToString(this,"AddOrEdit",productVm)});
          
         }
         

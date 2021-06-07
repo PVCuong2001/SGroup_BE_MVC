@@ -61,3 +61,4 @@
 /home/cuong/NET CORE/Folder1/Test1/obj/Debug/netcoreapp3.1/Test1.Views.pdb
 /home/cuong/NET CORE/Folder1/Test1/obj/Debug/netcoreapp3.1/Razor/Views/Product/AddOrEdit.cshtml.g.cs
 /home/cuong/NET CORE/Folder1/Test1/obj/Debug/netcoreapp3.1/Razor/Views/Product/Index.cshtml.g.cs
+/home/cuong/NET CORE/Folder1/Test1/obj/Debug/netcoreapp3.1/Razor/Views/Product/_ViewAll.cshtml.g.cs

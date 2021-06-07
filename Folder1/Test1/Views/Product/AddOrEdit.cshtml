@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "title";
+    Layout = null;
 }
 
  <div class="col-md-12">    
@@ -10,11 +11,11 @@
 
     <!-- Input and Submit elements -->
         <div class="form-horizontal">    
-            <form asp-controller="Product" asp-action="AddOrEdit" method="post">  
+            <form asp-controller="Product" asp-action="AddOrEdit" onsubmit="return jQueryAjaxPost(this)" autocomplete="off">  
                 <hr />   
                 <div class ="form-group">
-                    @*@Html.HiddenFor(model=> model.Id)*@
-                    <input type="hidden" value="@Model.Id" name="Id"/>
+                    @Html.HiddenFor(model=> model.Id)
+                    @*<input type="hidden" value="@Model.Id" name="Id"/>*@
                 </div> 
                 <div class="form-group">    
                     @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })    

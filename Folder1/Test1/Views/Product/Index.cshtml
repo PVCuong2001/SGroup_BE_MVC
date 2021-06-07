@@ -8,66 +8,16 @@
 
 <link rel="stylesheet" href="~/css/customer.css" type="text/css" />
 <body>
-<h1>Customer Management</h1>
+<h1>Product Management</h1>
 
 <p>
-    <a asp-action="AddOrEdit" asp-route-id="" >Add New Product</a>
+    @*<a asp-action="AddOrEdit" asp-route-id="" >Add New Product</a>*@
+      <a onclick="showInPopUp('@Url.Action("AddOrEdit","Product","",Context.Request.Scheme)','Add Product')">Add New Product</a>
 </p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Branch)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @if (item.ImageUrl != null)
-                {
-                    <img src="@Url.Content(item.ImageUrl)" alt="Image" />
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Branch)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-              
-                <a asp-controller="Product"
-                   asp-action="AddOrEdit" asp-route-id="@item.Id" >Edit</a> |
-                
-                <a asp-controller="Product" asp-action="/@item.SeoAlias-c.@item.Id" methods="get">Detail</a> |
-                
-                 @*
-                 <a onclick="return confirm('Are you sure you want to delete')" asp-controller="Customer"
-                                asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            *@
-                 <a onclick="return confirm('Are you sure you want to delete')" asp-controller="Customer"
-                                asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div id="view-all">
+    @await Html.PartialAsync("_ViewAll",Model)
+</div>
 
 @*<script src="~/js/IndexCustomer.js"></script>*@
 </body>

@@ -1,24 +1,28 @@
 using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using Test1.Extention;
 using Test1.Model;
+using Test1.ViewModel;
 
 namespace Test1.Service
 {
     public class ProductService
     {
         private readonly IMongoCollection<Product> products;
+        private readonly IMapper _mapper;
 
-        public ProductService(IConfiguration config)
+        public ProductService(IConfiguration config ,IMapper mapper)
         {
             MongoClient client = new MongoClient(config.GetConnectionString("MongoConnection"));
             IMongoDatabase database = client.GetDatabase("StoreManagement");
             products = database.GetCollection<Product>("Products");
+            _mapper = mapper;
         }
 
 
-        public List<Product> Get(string keyWord, string orderBy)
+        public List<ProductVM> Get(string keyWord, string orderBy)
         {
             FilterDefinition<Product> filter = Builders<Product>.Filter.Where(cus => true);
             ;
@@ -43,9 +47,17 @@ namespace Test1.Service
             {
                 sortDefinition = Builders<Product>.Sort.Ascending(x => x.Category);
             }
+            List<Product> list = products.Find(filter).Sort(sortDefinition).ToList();
+            List<ProductVM> listVM = new List<ProductVM>();
+            foreach (var product in list)
+            {
+                ProductVM productVm = _mapper.Map<ProductVM>(product);
+                listVM.Add(productVm);
+            }
 
-            return products.Find(filter).Sort(sortDefinition).ToList();
+            return listVM;
         }
+        
 
         public Product FindById(string id)
         {
