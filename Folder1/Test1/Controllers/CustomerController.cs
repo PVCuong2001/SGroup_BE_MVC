@@ -1,15 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson.IO;
 using Test1.Model;
 using Test1.Service;
 using Test1.ViewModel;
+using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace Test1.Controllers
 {
-    [Authorize]
+  
     public class CustomerController : Controller
     {
         private readonly CustomerService _customerService;
@@ -93,12 +96,19 @@ namespace Test1.Controllers
          
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public IActionResult Delete(string id){
             _customerService.Remove(id);
               return RedirectToAction(actionName: "Index", controllerName: "Customer");
-        }
+        }*/
 
-        
+        [HttpPost]
+        public IActionResult Delete([FromBody]JsonElement data)
+        {
+            string id = JsonConvert.DeserializeObject<string>(data.GetRawText());
+            
+            _customerService.Remove(id);
+            return Ok(1);
+        }
     }
 }

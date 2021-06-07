@@ -15,3 +15,30 @@ window.onload = function() {
     // ...
 }
 
+function Delete(tag)
+{
+    let id = $(tag).data("id");
+    let tr = $(tag).closest("td").parent();
+
+    fetch('/Customer/Delete', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(id)
+    })
+        .then(respon => respon.text())
+        .then(result => {
+            if(result == 1)
+            {
+                tr.remove();
+            }
+            else
+            {
+                alert("Xoa del dc !!!");
+            }
+        })
+        .catch(error => {
+            alert("Loi duong truyen");
+        });
+}

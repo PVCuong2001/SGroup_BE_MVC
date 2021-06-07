@@ -142,8 +142,7 @@ namespace Test1.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-         //   Response.Cookies.Delete("UserLoginCookie");
-         
+         //   Response.Cookies.Delete("UserLoginCookie"
          var cookieValue = HttpContext.Request.Cookies["UserLoginCookie"];
          ClaimsPrincipal principal = HttpContext.User as ClaimsPrincipal;
          string idUser = principal.FindFirst(ClaimTypes.Thumbprint).Value;
@@ -151,8 +150,7 @@ namespace Test1.Controllers
          user.ActiveFlag = false;
          _userService.updateUser(user);
          HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-         
-            return Redirect("/Home/Index");
+         return Redirect("/Home/Index");
         }
     }
 }

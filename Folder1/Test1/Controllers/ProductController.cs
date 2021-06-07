@@ -68,7 +68,6 @@ namespace Test1.Controllers
                 return Json(new {isValid =true , html = RazorHelper.RenderRazorViewToString(this,"_ViewAll",_productService.Get("",""))});
             }
            return Json(new {isValid =false , html = RazorHelper.RenderRazorViewToString(this,"AddOrEdit",productVm)});
-         
         }
         
         /*

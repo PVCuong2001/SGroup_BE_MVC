@@ -1,14 +1,17 @@
 @model IEnumerable<Test1.ViewModel.CustomerVM>
  @{
     ViewData["Title"] = "Customer Management";
-} 
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Customer Management App</title>
+}
+
+@section Styles
+{
     <link rel="stylesheet" href="~/css/customer.css" type="text/css" />
-</head>
+}
+
+@section Scripts
+{
+    <script src="~/js/IndexCustomer.js"></script>
+}
 <body>
 <h1>Customer Management</h1>
 
@@ -80,18 +83,14 @@
                 
                 <a asp-controller="Customer" asp-action="/@item.SeoAlias-c.@item.Id" methods="get">Detail</a> |
                 
-                 @*
-                 <a onclick="return confirm('Are you sure you want to delete')" asp-controller="Customer"
-                                asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            *@
-                 <a onclick="return confirm('Are you sure you want to delete')" asp-controller="Customer"
-                                asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                 @*<a onclick="return confirm('Are you sure you want to delete')" asp-controller="Customer"
+                    asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                 
+                 <a href="#" data-id="@item.Id" class="btn-delete" onclick="Delete(this)">Delete</a>
+                 
             </td>
         </tr>
 }
     </tbody>
 </table>
-
-<script src="~/js/IndexCustomer.js"></script>
 </body>
-</html>

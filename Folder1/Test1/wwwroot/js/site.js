@@ -16,32 +16,28 @@ showInPopUp = (url,title) =>{
     })
 }
 
-jQueryAjaxPost = form =>{
+jQueryAjaxPost = form => {
     console.log(form.action)
-    try{
-        $.ajax({
-            type : "POST",
-            contentType : false,
-            data : new FormData(form),
-            url : form.action,
-            processData: false,
-            success : function(res){
-                if(res.isValid){
-                    console.log("asdasd");
-                    $("#view-all").html(res.html);
-                    $("#form_modal .modal-body").html('');
-                    $("#form_modal .modal-title").html('');
-                    $("#form_modal").modal("hide");
-                }else{
-                    $("#form_modal .modal-body").html(res.html);
-                }
-            },
-            error : function(err){
-                console.log(err);
+    $.ajax({
+        type: "POST",
+        contentType: false,
+        data: new FormData(form),
+        url: form.action,
+        processData: false,
+        success: function (res) {
+            if (res.isValid) {
+                console.log("asdasd");
+                $("#view-all").html(res.html);
+                $("#form_modal .modal-body").html('');
+                $("#form_modal .modal-title").html('');
+                $("#form_modal").modal("hide");
+            } else {
+                $("#form_modal .modal-body").html(res.html);
             }
-        })
-    }catch(e){
-        console.log(e);
-    }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    })
     return false;
 }
