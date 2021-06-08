@@ -1,0 +1,67 @@
+<script id="table-template" type="x-tmpl-mustache">
+    <tr>
+        
+        <td>{{Name}}</td>
+        <td>{{CategoryName}}</td>
+        <td>{{Price}}</td>
+        <td>{{{Image}}}</td>
+        <td>{{CreatedDate}}</td>
+        <td>{{{Status}}}</td>
+        <th scope="row">
+            <a class="btn  btn-sm btn-edit" data-id="{{Id}}"><i class="fa fa-pencil"></i></a>
+            <a class="btn  btn-sm btn-delete" data-id="{{Id}}"><i class="fa fa-trash"></i></a>
+            <a href="#" data-id="{{Id}}" class="btn btn-xs btn-images"><i class="fa fa-image"></i></a>
+            <a href="#" data-id="{{Id}}" class="btn btn-xs btn-quantity"><i class="fa fa-hourglass-start"></i></a>
+            <a href="#" data-id="{{Id}}" class="btn btn-xs btn-whole-price"><i class="fa fa-money"></i></a>
+        </th>
+    </tr>
+</script>
+
+
+
+
+----------------------------------------------------------------
+
+
+function loadData(isPageChanged) {
+        var template = $('#table-template').html();
+        var render = "";
+        $.ajax({
+            type: 'GET',
+            data: {
+                categoryId: $('#ddlCategorySearch').val(),
+                keyword: $('#txtKeyword').val(),
+                page: tedu.configs.pageIndex,
+                pageSize: tedu.configs.pageSize
+            },
+            url: '/admin/product/GetAllPaging',
+            dataType: 'json',
+            success: function (response) {
+                console.log(response);
+                $.each(response.Results, function (i, item) {
+                    render += Mustache.render(template, {
+                        Id: item.Id,
+                        Name: item.Name,
+                        Image: item.Image == null ? '<img src="/admin-side/images/user.png" width=25' : '<img src="' + item.Image + '" width=25 />',
+                        CategoryName: item.ProductCategory.Name,
+                        Price: tedu.formatNumber(item.Price, 0),
+                        CreatedDate: tedu.dateTimeFormatJson(item.DateCreated),
+                        Status: tedu.getStatus(item.Status)
+                    });
+                    
+                });
+                $('#lblTotalRecords').text(response.RowCount);
+                if (render != '') {
+                    $('#tbl-content').html(render);
+                }
+                wrapPaging(response.RowCount, function () {
+                    loadData();
+                }, isPageChanged);
+            },
+            error: function (status) {
+                console.log(status);
+                tedu.notify('Cannot loading data', 'error');
+            }
+        });
+    }
+

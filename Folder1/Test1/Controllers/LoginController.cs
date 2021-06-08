@@ -139,7 +139,7 @@ namespace Test1.Controllers
                 });
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public IActionResult Logout()
         {
          //   Response.Cookies.Delete("UserLoginCookie"
@@ -151,6 +151,20 @@ namespace Test1.Controllers
          _userService.updateUser(user);
          HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
          return Redirect("/Home/Index");
+        }*/
+        
+        
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            var cookieValue = HttpContext.Request.Cookies["UserLoginCookie"];
+            ClaimsPrincipal principal = HttpContext.User as ClaimsPrincipal;
+            string idUser = principal.FindFirst(ClaimTypes.Thumbprint).Value;
+            var user = _userService.findById(idUser);
+            user.ActiveFlag = false;
+            _userService.updateUser(user);
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok(1);
         }
     }
 }

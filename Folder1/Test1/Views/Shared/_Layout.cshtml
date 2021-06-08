@@ -18,37 +18,40 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                @if (@User.Identity.IsAuthenticated ==false)
-                {
-                    <a class="navbar-brand" asp-area="" asp-controller="Login" asp-action="CheckLogin">Login</a>
-                }
-                else
-                {
+            <div id="menubar" class="container">
+                <div id="loginOrlogout">
+                    @if (@User.Identity.IsAuthenticated == false)
+                    {
+                        <a class="navbar-brand" asp-area="" asp-controller="Login" asp-action="CheckLogin">Login</a>
+                    }
+                    else
+                    {
+                        <div class="dropdown">
+                            <img data-toggle="dropdown" src=@principal.FindFirst(ClaimTypes.Uri).Value style="width: 30px ;height: 30px ; border-radius: 50%">
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <p class="dropdown-item">@principal.FindFirst(ClaimTypes.Name).Value</p>
+                                <p class="dropdown-item">@principal.FindFirst(ClaimTypes.Email).Value</p>
+                                @*<a class="dropdown-item" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>*@
+                                <a class="dropdown-item"  onclick="Logout()">Logout</a>
+                            </div>
                     
-                    
-                    <div class="dropdown">
-                        <img  data-toggle="dropdown" src =@principal.FindFirst(ClaimTypes.Uri).Value style ="width: 30px ;height: 30px ; border-radius: 50%">
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <p class="dropdown-item" >@principal.FindFirst(ClaimTypes.Name).Value</p>
-                            <p class="dropdown-item" >@principal.FindFirst(ClaimTypes.Email).Value</p>
-                            <a class="dropdown-item"   asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a hidden class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
                         </li>
@@ -95,7 +98,8 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/Login/loginController.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
