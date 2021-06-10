@@ -3,7 +3,7 @@
     @model Test1.ViewModel.CustomerVM  
   
     <div class="col-md-12">    
-        <h2>Employee Detail</h2>    
+        <h2>Employee Detail</h2>
     </div>    
         <form asp-controller="Customer" asp-action="Create" method="post">
     <!-- Input and Submit elements -->
@@ -16,6 +16,7 @@
                 <div class="col-md-10">
                     <input class="form-control" asp-for="@Model.Name"/>
                     <span class = "text-danger" asp-validation-for="@Model.Name"/>
+                    @Html.ValidationMessageFor(x => x.Name)
                 </div>    
             </div>    
         

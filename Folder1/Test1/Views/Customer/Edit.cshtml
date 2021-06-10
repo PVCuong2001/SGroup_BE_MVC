@@ -7,6 +7,7 @@
    } *@
     <div class="col-md-12">    
         <h2>Customer Management</h2>    
+      
     </div>    
 
     <!-- Input and Submit elements -->
@@ -20,7 +21,8 @@
                     @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })    
                     <div class="col-md-10">    
                       <input class="form-control" asp-for="@Model.Name"/>
-                        <span class = "text-danger" asp-validation-for="@Model.Name"/>  
+                      <span class = "text-danger" asp-validation-for="@Model.Name"/> 
+                      @Html.ValidationMessageFor(x => x.Name)
                     </div>    
                 </div>    
         

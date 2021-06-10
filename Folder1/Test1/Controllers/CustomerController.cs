@@ -51,12 +51,20 @@ namespace Test1.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(CustomerVM customerVM)
         {
-            Customer customer = new Customer();
-            _mapper.Map(customerVM, customer);
             if (ModelState.IsValid)
             {
-                _customerService.Create(customer);
-                return RedirectToAction(nameof(Index));
+                List<Customer>list = _customerService.Get(customerVM.Name, "");
+                if (list.Count == 0)
+                {
+                    Customer customer = new Customer();
+                    _mapper.Map(customerVM, customer);
+                    _customerService.Create(customer);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError("Name", "This name has already been existed"); 
+                }
             }
             return View(customerVM);
         }
@@ -64,8 +72,6 @@ namespace Test1.Controllers
         [HttpGet]
         [Route("/Customer/{alias}-c.{id}")]
         public IActionResult Detail(string id){
-            Console.WriteLine("sadasdasdas");
-            Console.WriteLine(id);
             Customer customer =  _customerService.FindById(id);
             CustomerVM customerVm = _mapper.Map<CustomerVM>(customer);
             return View (customerVm);
@@ -87,10 +93,19 @@ namespace Test1.Controllers
         {
             if (ModelState.IsValid)
             {
-                Customer customer = new Customer();
-                _mapper.Map(customerVM, customer);
-                _customerService.Update(customer);
-                return Redirect("/Customer/Search");
+                var list = _customerService.Get(customerVM.Name, "");
+                list.RemoveAll(x => x.Id == customerVM.Id);
+                if (list.Count == 0)
+                {
+                    Customer customer = new Customer();
+                    _mapper.Map(customerVM, customer);
+                    _customerService.Update(customer);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError("Name", "This name has already been existed"); 
+                }
             }
             return View(customerVM);
          
