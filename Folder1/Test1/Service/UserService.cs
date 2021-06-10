@@ -52,6 +52,7 @@ namespace Test1.Service
 
         public void updateUser(User user)
         {
+            user.Password = Md5.CreateMD5Hash(user.Password);
             users.ReplaceOne(x => x.Id == user.Id, user);
         }
     }

@@ -30,6 +30,7 @@ namespace Test1
             services.AddScoped<CustomerService>();
             services.AddScoped<UserService>();
             services.AddScoped<ProductService>();
+            services.AddScoped<SessionService>();
             services.AddAutoMapper(typeof(Startup));
             /*
             services.AddAuthentication("CookieAuthentication")  
@@ -65,10 +66,12 @@ namespace Test1
                 app.UseHsts();
             }
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
-            app.UseHttpsRedirection();
+          
             app.UseStaticFiles();
        
             app.UseMiddleware<LoginTwice>();
+            app.UseMiddleware<RemoveCookieIfNotNeeded>();
+            app.UseHttpsRedirection();
             app.UseRouting();
             
             app.UseAuthentication();

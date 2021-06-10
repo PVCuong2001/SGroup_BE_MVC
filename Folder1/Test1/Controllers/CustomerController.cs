@@ -12,7 +12,7 @@ using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace Test1.Controllers
 {
-  
+    [Authorize]
     public class CustomerController : Controller
     {
         private readonly CustomerService _customerService;

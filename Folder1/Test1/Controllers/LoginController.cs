@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Test1.Extention;
 using Test1.Model;
 using Test1.Service;
 using Test1.ViewModel;
@@ -14,21 +17,42 @@ namespace Test1.Controllers
     public class LoginController : Controller
     {
         private readonly UserService _userService;
+        private readonly SessionService _sessionService;
         private readonly IMapper _mapper;
 
-        public LoginController(UserService userService, IMapper imapper)
+        public LoginController(UserService userService, IMapper imapper , SessionService sessionService)
         {
             _userService = userService;
             _mapper = _mapper;
+            _sessionService = sessionService;
         }
         
-        // GET
-        /*
-        public IActionResult Index()
+        private string CreateCookie(User user)
         {
-            return View();
+            var userClaims = new List<Claim>()  
+            {  
+                new Claim(ClaimTypes.Name, user.Name),  
+                new Claim(ClaimTypes.Email, user.Gmail),
+                new Claim(ClaimTypes.Thumbprint , user.Id),
+                new Claim(ClaimTypes.Uri,user.ImageUrl)
+            };  
+  
+            //     var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");  
+  
+            var grandmaIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);  
+            var userPrincipal = new ClaimsPrincipal(new[] { grandmaIdentity });
+            /*
+            var authenProperties = new AuthenticationProperties
+            {
+                IsPersistent = true,
+                ExpiresUtc = DateTime.UtcNow.AddSeconds(5)
+            };
+            */
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal);
+            var listCookie = HttpContext.Response.GetTypedHeaders().SetCookie;
+            var result = listCookie.Last(x => x.Name == "UserLoginCookie").Value.ToString();
+            return result;
         }
-        */
         
         [HttpGet]
         public IActionResult CheckLogin()
@@ -48,36 +72,35 @@ namespace Test1.Controllers
                 List<User>list = _userService.findByProperty(properties);
                 if (list != null && list.Count!=0)
                 {
-                    if (list[0].ActiveFlag == true)
+                    Dictionary<string, string> propertiesSession = new Dictionary<string, string>();
+                    propertiesSession.Add("idUser",list[0].Id);
+                    propertiesSession.Add("status","Active");
+                    List<Session> listSession = _sessionService.Get(propertiesSession);
+                    if (listSession.Count != 0)
                     {
-                        ViewData["Message"] = "Are you kidding me \\n This account has already logined";
+                        if (listSession[0].ExpiredTime>DateTime.UtcNow && listSession[0].LastAccessTime.Add(ConstParameter.requiredActiveTime) > DateTime.Now )
+                        {
+                            ViewData["Message"] = "Are you kidding me \\n This account has already logined";
+                            return View(loginVm);
+                        }
+                        else
+                        {
+                            listSession[0].ActiveFlag = false;
+                            _sessionService.Update(listSession[0]);
+                        }
                     }
-                    else
-                    {
-                    var userClaims = new List<Claim>()  
-                    {  
-                        new Claim(ClaimTypes.Name, list[0].Name),  
-                        new Claim(ClaimTypes.Email, list[0].Gmail),
-                        new Claim(ClaimTypes.Thumbprint , list[0].Id),
-                        new Claim(ClaimTypes.Uri,list[0].ImageUrl)
-                    };  
-  
-               //     var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");  
-  
-                    var grandmaIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);  
-                    var userPrincipal = new ClaimsPrincipal(new[] { grandmaIdentity });
-                    /*
-                    var authenProperties = new AuthenticationProperties
-                    {
-                        IsPersistent = true,
-                        ExpiresUtc = DateTime.UtcNow.AddSeconds(5)
-                    };
-                    */
-                    var temp =HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal);
-                    list[0].ActiveFlag = true;
-                    _userService.updateUser(list[0]);
-                    }
-                    return Redirect("/Home/Index");
+                    var cookie = CreateCookie(list[0]);
+                        Session session = new Session()
+                        {
+                            UserId = list[0].Id,
+                            LoginTime = DateTime.UtcNow,
+                            ExpiredTime =DateTime.UtcNow.Add(ConstParameter.duration),
+                            LastAccessTime = DateTime.UtcNow,
+                            Cookie = cookie,
+                            ActiveFlag = true
+                        };
+                        _sessionService.Create(session);
+                        return Redirect("/Home/Index");
                 }
                 else
                 {
@@ -87,7 +110,7 @@ namespace Test1.Controllers
             return View(loginVm);
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public IActionResult JustTest(string gmail, string password)
         {
             string check = "";
@@ -127,7 +150,7 @@ namespace Test1.Controllers
                         IsPersistent = true,
                         ExpiresUtc = DateTime.UtcNow.AddSeconds(5)
                     };
-                    */
+                    #1#
                     var temp =HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal);
                     list[0].ActiveFlag = true;
                     _userService.updateUser(list[0]);
@@ -137,7 +160,7 @@ namespace Test1.Controllers
                 {
                     check = check 
                 });
-        }
+        }*/
 
         /*[HttpGet]
         public IActionResult Logout()
@@ -155,16 +178,20 @@ namespace Test1.Controllers
         
         
         [HttpGet]
-        public IActionResult Logout()
+        public  IActionResult Logout()
         {
             var cookieValue = HttpContext.Request.Cookies["UserLoginCookie"];
             ClaimsPrincipal principal = HttpContext.User as ClaimsPrincipal;
             string idUser = principal.FindFirst(ClaimTypes.Thumbprint).Value;
-            var user = _userService.findById(idUser);
-            user.ActiveFlag = false;
-            _userService.updateUser(user);
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            Dictionary<string, string> propertiesSession = new Dictionary<string, string>();
+            propertiesSession.Add("idUser",idUser);
+            List<Session> listSession = _sessionService.Get(propertiesSession);
+            listSession[0].ActiveFlag = false;
+            _sessionService.Update(listSession[0]);
             return Ok(1);
         }
+
+       
     }
 }

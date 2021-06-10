@@ -21,6 +21,7 @@ namespace Test1.Controllers
         }
         public IActionResult Index()
         {
+            
             return View();
         }
 
