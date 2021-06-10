@@ -2,7 +2,6 @@ $("#facebook").click(function (){
     let gmail = $("#gmail").val().trim();
    let pass = $("#password").val().trim();
    let url = "/Login/JustTest?gmail="+gmail+"&password="+pass;
-   
    $.ajax({
        url : url ,
        type : "get",

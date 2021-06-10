@@ -38,13 +38,13 @@ namespace Test1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CheckLogin(UserVM userVm)
+        public IActionResult CheckLogin(LoginVM loginVm)
         {
             if (ModelState.IsValid)
             {
                 Dictionary<string, string> properties = new Dictionary<string, string>();
-                properties.Add("Gmail",userVm.Gmail);
-                properties.Add("Password", userVm.Password);
+                properties.Add("Gmail",loginVm.Gmail);
+                properties.Add("Password", loginVm.Password);
                 List<User>list = _userService.findByProperty(properties);
                 if (list != null && list.Count!=0)
                 {
@@ -84,7 +84,7 @@ namespace Test1.Controllers
                     ViewData["Message"] = "Account is not existed \\n Poor You";
                 }
             }
-            return View(userVm);
+            return View(loginVm);
         }
 
         [HttpGet]

@@ -2,14 +2,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Test1.ViewModel
 {
-    public class UserVM
+    public class LoginVM
     {
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter the name")]
-        [StringLength(maximumLength: 25, MinimumLength = 10, ErrorMessage = "Length must be between 10 to 25")]
-        public string Name { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter the password")]
         public string Password { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter the gmail")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Gmail { get; set; }
     }
 }

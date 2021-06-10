@@ -10,6 +10,7 @@ namespace Test1.ViewModel
 
             CreateMap<Customer, CustomerVM>().ReverseMap();
             CreateMap<User, UserVM>().ReverseMap();
+            CreateMap<User, LoginVM>().ReverseMap();
             CreateMap<Product, ProductVM>().ReverseMap();
         }
     }

@@ -41,3 +41,23 @@ jQueryAjaxPost = form => {
     })
     return false;
 }
+
+function ValidateEmail() {
+    let form =  $("#loginForm");
+    let emaill = $("#gmail").val();
+    let validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    form.submit(function(e){
+        if (emaill.match(validRegex)) {
+            console.log("adasd");
+        } else {
+            alert("Invalid email address!");
+            e.preventDefault();
+        }
+    });
+    
+    
+
+
+    
+
+}

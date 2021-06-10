@@ -1,16 +1,23 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Test1.ViewModel
 {
     public class CustomerVM
     {
-        
         public string Id { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter the name")]
+        [StringLength(maximumLength: 25, MinimumLength = 10, ErrorMessage = "Length must be between 10 to 25")]
         public string Name { get; set; }
         public string SeoAlias { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter the Date of Birth")]
+        [DataType(DataType.Date , ErrorMessage ="Wrong Date Format")]
         public DateTime DTB { get; set; }
+        [EnumDataType(typeof(GenderEnum), ErrorMessage = "Wrong Gender type")]
         public GenderEnum Gender { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter the address")]
         public string Address { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter the ImageUrl")]
         public string ImageUrl { get; set; }
     public enum GenderEnum
     

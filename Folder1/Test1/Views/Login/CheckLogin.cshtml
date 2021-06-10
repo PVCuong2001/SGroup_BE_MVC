@@ -1,15 +1,13 @@
 @*
 https://codepen.io/Black-Rose/pen/zYNPPJe
 *@
-@model Test1.ViewModel.UserVM
+@model Test1.ViewModel.LoginVM
 
 @{
-  //  Layout = null;
+    Layout = null;
 }
 
- @section Scripts{
-     <script src ="~/js/Login/loginController.js"></script>
- } 
+
 <head>
   <title>Login</title>
   <link rel = "stylesheet" href ="~/css/Login.css" type="text/css">
@@ -21,12 +19,13 @@ https://codepen.io/Black-Rose/pen/zYNPPJe
   </div>
   <div id="right">
     <h1 id="login">LogIn</h1><br>
-    <form asp-controller="Login" asp-action="CheckLogin" method ="post">
-        <input asp-for="Gmail" id="gmail" class="client-info">
+    <form asp-controller="Login" asp-action="CheckLogin" method ="post" id ="loginForm" >
+        <input asp-for="@Model.Gmail" id="gmail" class="client-info">
         <label asp-for="Gmail"></label>
-        <input asp-for="Password" id="password" class="client-info">
+        <input  asp-for="@Model.Password" id="password" class="client-info">
         <label asp-for="Password"></label>
         <input type="submit" id="submit" class="client-info" value="Submit">
+ 
     </form>
     
     <button class="social" id="facebook">connect with facebook</button>
@@ -39,7 +38,7 @@ https://codepen.io/Black-Rose/pen/zYNPPJe
   </div>
 </div>
 
-     @*@if (ViewData["Message"] != null)
+@*@if (ViewData["Message"] != null)
         {
             <script type="text/javascript">
                 window.onload = function () {
@@ -48,4 +47,8 @@ https://codepen.io/Black-Rose/pen/zYNPPJe
             </script>
         }*@
 
+       <script src="~/lib/jquery/dist/jquery.min.js"></script>
+           <script src="~/js/site.js" asp-append-version="true"></script>
+            <script src ="~/js/Login/loginController.js"></script>
+<partial name="_ValidationScriptsPartial" />
 </body>
