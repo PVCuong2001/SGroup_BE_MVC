@@ -186,10 +186,12 @@ namespace Test1.Controllers
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             Dictionary<string, string> propertiesSession = new Dictionary<string, string>();
             propertiesSession.Add("idUser",idUser);
+            propertiesSession.Add("status","Active");
             List<Session> listSession = _sessionService.Get(propertiesSession);
             listSession[0].ActiveFlag = false;
             _sessionService.Update(listSession[0]);
-            return Ok(1);
+            /*return Ok(1);*/
+            return Redirect("/Home/Index");
         }
 
        

@@ -25,6 +25,7 @@ namespace Test1.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult Privacy()
         {
             return View();

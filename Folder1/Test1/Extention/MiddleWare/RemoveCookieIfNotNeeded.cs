@@ -16,7 +16,7 @@ namespace Test1.Extention.MiddleWare
         }
         public async Task Invoke(HttpContext httpContext , SessionService _sessionService)
         {
-            if (httpContext.User.Identity.IsAuthenticated)
+            if (httpContext.Request.Path != "/Login/Logout" && httpContext.User.Identity.IsAuthenticated)
             {
                 bool redirect=false;
                 var cookie = httpContext.Request.Cookies["UserLoginCookie"];
@@ -28,14 +28,13 @@ namespace Test1.Extention.MiddleWare
                 {
                     if (list[0].LastAccessTime.Add(ConstParameter.requiredActiveTime) < DateTime.UtcNow)
                     {
-                        list[0].ActiveFlag = false;
                         redirect = true;
                     }
                     else
                     {
                         list[0].LastAccessTime = DateTime.UtcNow;
+                        _sessionService.Update(list[0]);
                     }
-                    _sessionService.Update(list[0]);
                 }
                 else
                 {
