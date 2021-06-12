@@ -16,7 +16,7 @@ namespace Test1.Extention.MiddleWare
         }
         public async Task Invoke(HttpContext httpContext , SessionService _sessionService)
         {
-            if (httpContext.Request.Path != "/Login/Logout" && httpContext.User.Identity.IsAuthenticated)
+            if (httpContext.Request.Path != "/Login/Logout" && httpContext.Request.Path != "/Login/CheckLogin"  && httpContext.User.Identity.IsAuthenticated)
             {
                 bool redirect=false;
                 var cookie = httpContext.Request.Cookies["UserLoginCookie"];

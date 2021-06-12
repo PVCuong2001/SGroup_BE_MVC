@@ -78,7 +78,7 @@ namespace Test1.Controllers
                     List<Session> listSession = _sessionService.Get(propertiesSession);
                     if (listSession.Count != 0)
                     {
-                        if (listSession[0].ExpiredTime>DateTime.UtcNow && listSession[0].LastAccessTime.Add(ConstParameter.requiredActiveTime) > DateTime.Now )
+                        if ( listSession[0].ExpiredTime>DateTime.UtcNow && listSession[0].LastAccessTime.Add(ConstParameter.requiredActiveTime) > DateTime.UtcNow )
                         {
                             ViewData["Message"] = "Are you kidding me \\n This account has already logined";
                             return View(loginVm);
@@ -185,11 +185,14 @@ namespace Test1.Controllers
             string idUser = principal.FindFirst(ClaimTypes.Thumbprint).Value;
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             Dictionary<string, string> propertiesSession = new Dictionary<string, string>();
-            propertiesSession.Add("idUser",idUser);
-            propertiesSession.Add("status","Active");
+            propertiesSession.Add("cookie",cookieValue);
             List<Session> listSession = _sessionService.Get(propertiesSession);
-            listSession[0].ActiveFlag = false;
-            _sessionService.Update(listSession[0]);
+            if (listSession.Count != 0)
+            {
+                listSession[0].ActiveFlag = false;
+                _sessionService.Update(listSession[0]);
+            }
+   
             /*return Ok(1);*/
             return Redirect("/Home/Index");
         }
