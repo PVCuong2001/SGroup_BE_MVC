@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Test1.Extention.MiddleWare;
 using Test1.Service;
+using Test1.Service.Service_Interface;
 
 namespace Test1
 {
@@ -27,10 +28,10 @@ namespace Test1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<CustomerService>();
-            services.AddScoped<UserService>();
-            services.AddScoped<ProductService>();
-            services.AddScoped<SessionService>();
+            services.AddScoped<ICustomerService,CustomerService>();
+            services.AddScoped<IUserService,UserService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ISessionService ,SessionService>();
             services.AddAutoMapper(typeof(Startup));
             /*
             services.AddAuthentication("CookieAuthentication")  

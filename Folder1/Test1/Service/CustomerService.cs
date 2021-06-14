@@ -3,11 +3,12 @@ using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using Test1.Extention;
 using Test1.Model;
+using Test1.Service.Service_Interface;
 using Test1.ViewModel;
 
 namespace Test1.Service
 {
-    public class CustomerService
+    public class CustomerService : ICustomerService
     {
          private readonly IMongoCollection<Customer> customers;
 
@@ -65,7 +66,7 @@ namespace Test1.Service
             customers.DeleteOne(cus => cus.Id == customer.Id);
         }
 
-        public void Remove(string id)
+        public void RemoveById(string id)
         {
             customers.DeleteOne(cus => cus.Id == id);
         }

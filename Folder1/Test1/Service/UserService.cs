@@ -3,11 +3,12 @@ using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using Test1.Extention;
 using Test1.Model;
+using Test1.Service.Service_Interface;
 using Test1.ViewModel;
 
 namespace Test1.Service
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IMongoCollection<User> users;
 

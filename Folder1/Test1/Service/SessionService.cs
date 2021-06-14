@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using Test1.Model;
+using Test1.Service.Service_Interface;
 
 namespace Test1.Service
 {
-    public class SessionService
+    public class SessionService : ISessionService
     {
         private readonly IMongoCollection<Session> sessions;
 

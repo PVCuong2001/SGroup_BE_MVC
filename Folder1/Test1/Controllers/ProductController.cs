@@ -5,15 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 using Test1.Extention;
 using Test1.Model;
 using Test1.Service;
+using Test1.Service.Service_Interface;
 using Test1.ViewModel;
 
 namespace Test1.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly ProductService _productService;
+        private readonly IProductService _productService;
         private readonly IMapper _mapper;
-        public ProductController (ProductService productService , IMapper mapper){
+        public ProductController (IProductService productService , IMapper mapper){
             _productService = productService;
             _mapper = mapper;
         }

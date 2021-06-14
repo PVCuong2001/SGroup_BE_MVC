@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Test1.Service;
+using Test1.Service.Service_Interface;
 
 namespace Test1.Extention.MiddleWare
 {
@@ -14,7 +15,7 @@ namespace Test1.Extention.MiddleWare
             _next = next;
      
         }
-        public async Task Invoke(HttpContext httpContext , SessionService _sessionService)
+        public async Task Invoke(HttpContext httpContext , ISessionService _sessionService)
         {
             if (httpContext.Request.Path != "/Login/Logout" && httpContext.Request.Path != "/Login/CheckLogin"  && httpContext.User.Identity.IsAuthenticated)
             {

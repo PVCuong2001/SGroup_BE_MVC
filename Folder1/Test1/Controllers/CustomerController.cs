@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson.IO;
 using Test1.Model;
 using Test1.Service;
+using Test1.Service.Service_Interface;
 using Test1.ViewModel;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
@@ -15,9 +16,9 @@ namespace Test1.Controllers
     [Authorize]
     public class CustomerController : Controller
     {
-        private readonly CustomerService _customerService;
+        private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
-        public CustomerController (CustomerService customerService , IMapper mapper){
+        public CustomerController (ICustomerService customerService , IMapper mapper){
             _customerService = customerService;
             _mapper = mapper;
         }
@@ -122,7 +123,7 @@ namespace Test1.Controllers
         {
             string id = JsonConvert.DeserializeObject<string>(data.GetRawText());
             
-            _customerService.Remove(id);
+            _customerService.RemoveById(id);
             return Ok(1);
         }
     }

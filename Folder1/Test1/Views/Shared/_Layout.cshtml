@@ -31,8 +31,8 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <p class="dropdown-item">@principal.FindFirst(ClaimTypes.Name).Value</p>
                                 <p class="dropdown-item">@principal.FindFirst(ClaimTypes.Email).Value</p>
-                                @*<a class="dropdown-item" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>*@
-                                <a class="dropdown-item"  onclick="Logout()">Logout</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
+                                @*<a class="dropdown-item"  onclick="Logout()">Logout</a>*@
                             </div>
                     
                         </div>

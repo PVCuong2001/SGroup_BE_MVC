@@ -10,17 +10,18 @@ using Microsoft.AspNetCore.Mvc;
 using Test1.Extention;
 using Test1.Model;
 using Test1.Service;
+using Test1.Service.Service_Interface;
 using Test1.ViewModel;
 
 namespace Test1.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly UserService _userService;
-        private readonly SessionService _sessionService;
+        private readonly IUserService _userService;
+        private readonly ISessionService _sessionService;
         private readonly IMapper _mapper;
 
-        public LoginController(UserService userService, IMapper imapper , SessionService sessionService)
+        public LoginController(IUserService userService, IMapper imapper , ISessionService sessionService)
         {
             _userService = userService;
             _mapper = _mapper;
