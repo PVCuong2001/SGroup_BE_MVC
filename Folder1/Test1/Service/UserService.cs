@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using Test1.Extention;
@@ -19,7 +20,7 @@ namespace Test1.Service
             users = database.GetCollection<User>("Users");
         }
 
-        public List<User> findByProperty(Dictionary<string, string> properties)
+        public async Task<List<User>> findByProperty(Dictionary<string, string> properties)
         {
             FilterDefinition<User> filter = Builders<User>.Filter.Where(cus => true);
             if (properties.ContainsKey("Gmail"))
@@ -30,7 +31,9 @@ namespace Test1.Service
                 filter &= Builders<User>.Filter.Where(x => x.Password.Equals(Md5pass));
             }
 
-            return users.Find(filter).ToList();
+            var query = await users.FindAsync(filter);
+            var list = query.ToList();
+            return list;
         }
 
         public bool checkLogin(string gmail, string password)

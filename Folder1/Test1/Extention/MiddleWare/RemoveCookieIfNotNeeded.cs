@@ -24,7 +24,7 @@ namespace Test1.Extention.MiddleWare
                 Dictionary<string, string> properties = new Dictionary<string, string>();
                 properties.Add("cookie", cookie);
                 properties.Add("status", "Active");
-                var list = _sessionService.Get(properties);
+                var list =await _sessionService.Get(properties);
                 if (list.Count != 0)
                 {
                     if (list[0].LastAccessTime.Add(ConstParameter.requiredActiveTime) < DateTime.UtcNow)
@@ -34,7 +34,7 @@ namespace Test1.Extention.MiddleWare
                     else
                     {
                         list[0].LastAccessTime = DateTime.UtcNow;
-                        _sessionService.Update(list[0]);
+                        _sessionService.Update(list[0]).Wait();
                     }
                 }
                 else

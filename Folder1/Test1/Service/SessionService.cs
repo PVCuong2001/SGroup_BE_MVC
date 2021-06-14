@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using Test1.Model;
@@ -19,7 +20,7 @@ namespace Test1.Service
             sessions = database.GetCollection<Session>("Sessions");
         }
         
-        public List<Session> Get(Dictionary<string , string > properties)
+        public async Task<List<Session>> Get(Dictionary<string , string > properties)
         {
             FilterDefinition<Session> filter =Builders<Session>.Filter.Where(x => true);;
             if(properties.ContainsKey("idUser")) {
@@ -32,8 +33,10 @@ namespace Test1.Service
                 if(properties["status"] == "Active") filter &= Builders<Session>.Filter.Where(x => x.ActiveFlag == true );
                 else if(properties["status"] == "Inactive") filter &= Builders<Session>.Filter.Where(x => x.ActiveFlag == false );
             }
-            
-            return sessions.Find(filter).ToList();
+
+            var query =await sessions.FindAsync(filter);
+            var list = query.ToList();
+            return list;
         }
 
         public Session CheckExistSession(string idUser)
@@ -45,15 +48,14 @@ namespace Test1.Service
             return sessions.Find(filter).FirstOrDefault();
         }
         
-        public Session Create(Session session)
+        public async Task Create(Session session)
         {
-            sessions.InsertOne(session);
-            return session;
+            await sessions.InsertOneAsync(session);
         }
         
-        public void Update(Session session)
+        public async Task Update(Session session)
         {
-            sessions.ReplaceOne(x => x.Id == session.Id , session);
+            await sessions.ReplaceOneAsync(x => x.Id == session.Id , session);
         }
     }
 }

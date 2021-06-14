@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -28,7 +29,7 @@ namespace Test1.Controllers
             _sessionService = sessionService;
         }
         
-        private string CreateCookie(User user)
+        private async Task<string> CreateCookie(User user)
         {
             var userClaims = new List<Claim>()  
             {  
@@ -63,20 +64,22 @@ namespace Test1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CheckLogin(LoginVM loginVm)
+        public async  Task<IActionResult> CheckLogin(LoginVM loginVm)
         {
             if (ModelState.IsValid)
             {
                 Dictionary<string, string> properties = new Dictionary<string, string>();
                 properties.Add("Gmail",loginVm.Gmail);
                 properties.Add("Password", loginVm.Password);
-                List<User>list = _userService.findByProperty(properties);
+                var query =await _userService.findByProperty(properties);
+                var list = query;
                 if (list != null && list.Count!=0)
                 {
                     Dictionary<string, string> propertiesSession = new Dictionary<string, string>();
                     propertiesSession.Add("idUser",list[0].Id);
                     propertiesSession.Add("status","Active");
-                    List<Session> listSession = _sessionService.Get(propertiesSession);
+                    var query1 =await _sessionService.Get(propertiesSession);
+                    var listSession = query1;
                     if (listSession.Count != 0)
                     {
                         if ( listSession[0].ExpiredTime>DateTime.UtcNow && listSession[0].LastAccessTime.Add(ConstParameter.requiredActiveTime) > DateTime.UtcNow )
@@ -87,7 +90,7 @@ namespace Test1.Controllers
                         else
                         {
                             listSession[0].ActiveFlag = false;
-                            _sessionService.Update(listSession[0]);
+                             _sessionService.Update(listSession[0]).Wait();
                         }
                     }
                     var cookie = CreateCookie(list[0]);
@@ -97,10 +100,11 @@ namespace Test1.Controllers
                             LoginTime = DateTime.UtcNow,
                             ExpiredTime =DateTime.UtcNow.Add(ConstParameter.duration),
                             LastAccessTime = DateTime.UtcNow,
-                            Cookie = cookie,
                             ActiveFlag = true
                         };
-                        _sessionService.Create(session);
+                        cookie.Wait();
+                        session.Cookie = cookie.Result;
+                        _sessionService.Create(session).Wait();
                         return Redirect("/Home/Index");
                 }
                 else
@@ -179,15 +183,14 @@ namespace Test1.Controllers
         
         
         [HttpGet]
-        public  IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             var cookieValue = HttpContext.Request.Cookies["UserLoginCookie"];
             ClaimsPrincipal principal = HttpContext.User as ClaimsPrincipal;
-            string idUser = principal.FindFirst(ClaimTypes.Thumbprint).Value;
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             Dictionary<string, string> propertiesSession = new Dictionary<string, string>();
             propertiesSession.Add("cookie",cookieValue);
-            List<Session> listSession = _sessionService.Get(propertiesSession);
+            List<Session> listSession =await _sessionService.Get(propertiesSession);
             if (listSession.Count != 0)
             {
                 listSession[0].ActiveFlag = false;
