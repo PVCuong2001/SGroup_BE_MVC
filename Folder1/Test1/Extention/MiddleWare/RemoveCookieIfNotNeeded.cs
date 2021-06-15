@@ -34,7 +34,7 @@ namespace Test1.Extention.MiddleWare
                     else
                     {
                         list[0].LastAccessTime = DateTime.UtcNow;
-                        _sessionService.Update(list[0]).Wait();
+                        await _sessionService.Update(list[0]);
                     }
                 }
                 else

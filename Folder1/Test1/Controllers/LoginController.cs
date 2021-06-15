@@ -71,15 +71,13 @@ namespace Test1.Controllers
                 Dictionary<string, string> properties = new Dictionary<string, string>();
                 properties.Add("Gmail",loginVm.Gmail);
                 properties.Add("Password", loginVm.Password);
-                var query =await _userService.findByProperty(properties);
-                var list = query;
+                var list =await _userService.findByProperty(properties);
                 if (list != null && list.Count!=0)
                 {
                     Dictionary<string, string> propertiesSession = new Dictionary<string, string>();
                     propertiesSession.Add("idUser",list[0].Id);
                     propertiesSession.Add("status","Active");
-                    var query1 =await _sessionService.Get(propertiesSession);
-                    var listSession = query1;
+                    var listSession =await _sessionService.Get(propertiesSession);
                     if (listSession.Count != 0)
                     {
                         if ( listSession[0].ExpiredTime>DateTime.UtcNow && listSession[0].LastAccessTime.Add(ConstParameter.requiredActiveTime) > DateTime.UtcNow )
@@ -90,10 +88,10 @@ namespace Test1.Controllers
                         else
                         {
                             listSession[0].ActiveFlag = false;
-                             _sessionService.Update(listSession[0]).Wait();
+                             await _sessionService.Update(listSession[0]);
                         }
                     }
-                    var cookie = CreateCookie(list[0]);
+                    var cookie =await CreateCookie(list[0]);
                         Session session = new Session()
                         {
                             UserId = list[0].Id,
@@ -102,9 +100,8 @@ namespace Test1.Controllers
                             LastAccessTime = DateTime.UtcNow,
                             ActiveFlag = true
                         };
-                        cookie.Wait();
-                        session.Cookie = cookie.Result;
-                        _sessionService.Create(session).Wait();
+                        session.Cookie = cookie;
+                       await _sessionService.Create(session);
                         return Redirect("/Home/Index");
                 }
                 else
@@ -194,7 +191,7 @@ namespace Test1.Controllers
             if (listSession.Count != 0)
             {
                 listSession[0].ActiveFlag = false;
-                _sessionService.Update(listSession[0]);
+               await _sessionService.Update(listSession[0]);
             }
    
             /*return Ok(1);*/
