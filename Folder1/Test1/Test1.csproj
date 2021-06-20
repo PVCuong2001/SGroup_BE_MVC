@@ -26,4 +26,8 @@
     <_ContentIncludedByDefault Remove="Pages\Product\Index.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images" />
+  </ItemGroup>
+
 </Project>
