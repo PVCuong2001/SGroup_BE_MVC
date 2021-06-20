@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson.IO;
+using Test1.Extention;
 using Test1.Model;
 using Test1.Service;
 using Test1.Service.Service_Interface;
@@ -66,7 +67,13 @@ namespace Test1.Controllers
                 List<Customer> list = await _customerService.Get(customerVM.Name, "");
                 if (list.Count == 0)
                 {
-                    string imgUrl = UploadedFile(customerVM);
+                    string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                    string imgUrl = IO_Management.UploadedFile(customerVM,folderPath);
+                    if (imgUrl == "fail")
+                    {
+                        ModelState.AddModelError("ProfileImage", "Fail to save image ,please save again");
+                        return View(customerVM);
+                    }
                     Customer customer = new Customer();
                     _mapper.Map(customerVM, customer);
                     customer.ImageUrl = imgUrl;
@@ -112,7 +119,13 @@ namespace Test1.Controllers
                 list.RemoveAll(x => x.Id == customerVM.Id);
                 if (list.Count == 0)
                 {
-                    string imgUrl = UploadedFile(customerVM);
+                    string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                    string imgUrl = IO_Management.UploadedFile(customerVM,folderPath);
+                    if (imgUrl == "fail")
+                    {
+                        ModelState.AddModelError("ProfileImage", "Fail to save image ,please save again");
+                        return View(customerVM);
+                    }
                     Customer customer = new Customer();
                     _mapper.Map(customerVM, customer);
                     customer.ImageUrl = imgUrl;
@@ -140,47 +153,14 @@ namespace Test1.Controllers
             string id = JsonConvert.DeserializeObject<string>(data.GetRawText());
             var customer = await _customerService.FindById(id);
             string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-            string fullPath = Path.Combine(uploadsFolder , customer.ImageUrl);
-            await deleteFile(fullPath);
+            string fullPath = Path.Combine(uploadsFolder, customer.ImageUrl);
+            await IO_Management.deleteFile(fullPath);
             await _customerService.RemoveById(id);
             return Ok(1);
         }
 
-        private string UploadedFile(CustomerVM customerVM)
-        {
-            string uniqueFileName = null;
+        
 
-            if (customerVM.ProfileImage != null)
-            {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + customerVM.ProfileImage.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    customerVM.ProfileImage.CopyTo(fileStream);
-                }
-            }
-            return uniqueFileName;
-        }
-
-        private async Task deleteFile(string fullPath)
-        {
-            try    
-            {
-// Check if file exists with its full path    
-                if (System.IO.File.Exists(fullPath))    
-                {    
-// If file found, delete it    
-                    System.IO.File.Delete(fullPath);    
-                    Console.WriteLine("File deleted.");    
-                }    
-                else Console.WriteLine("File not found");    
-            }    
-            catch (IOException ioExp)    
-            {    
-                Console.WriteLine(ioExp.Message);    
-            }    
-        }
         
     }
 }
