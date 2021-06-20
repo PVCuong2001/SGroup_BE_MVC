@@ -138,7 +138,10 @@ namespace Test1.Controllers
         public async Task<IActionResult> Delete([FromBody] JsonElement data)
         {
             string id = JsonConvert.DeserializeObject<string>(data.GetRawText());
-
+            var customer = await _customerService.FindById(id);
+            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+            string fullPath = Path.Combine(uploadsFolder , customer.ImageUrl);
+            await deleteFile(fullPath);
             await _customerService.RemoveById(id);
             return Ok(1);
         }
@@ -157,8 +160,27 @@ namespace Test1.Controllers
                     customerVM.ProfileImage.CopyTo(fileStream);
                 }
             }
-
             return uniqueFileName;
         }
+
+        private async Task deleteFile(string fullPath)
+        {
+            try    
+            {
+// Check if file exists with its full path    
+                if (System.IO.File.Exists(fullPath))    
+                {    
+// If file found, delete it    
+                    System.IO.File.Delete(fullPath);    
+                    Console.WriteLine("File deleted.");    
+                }    
+                else Console.WriteLine("File not found");    
+            }    
+            catch (IOException ioExp)    
+            {    
+                Console.WriteLine(ioExp.Message);    
+            }    
+        }
+        
     }
 }
