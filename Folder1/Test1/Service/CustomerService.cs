@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using Test1.Extention;
@@ -19,7 +20,7 @@ namespace Test1.Service
             customers = database.GetCollection<Customer>("Customers");
         }
 
-        public List<Customer> Get(string keyWord , string orderBy)
+        public async Task<List<Customer>> Get(string keyWord , string orderBy)
         {
             FilterDefinition<Customer> filter =Builders<Customer>.Filter.Where(cus => true);;
             SortDefinition<Customer> sortDefinition = null;
@@ -40,35 +41,33 @@ namespace Test1.Service
             {
                 sortDefinition = Builders<Customer>.Sort.Ascending(x => x.Gender);
             }
-        
-            return customers.Find(filter).Sort(sortDefinition).ToList();
+            return await customers.Find(filter).Sort(sortDefinition).ToListAsync();
         }
-        public Customer FindById(string id)
+        public async Task<Customer> FindById(string id)
         {
-            return customers.Find(x => x.Id == id).FirstOrDefault();
+            return await customers.Find(x =>x.Id ==id).SingleOrDefaultAsync();
         }
 
-        public Customer Create(Customer customer)
+        public async Task Create(Customer customer)
         {
             customer.SeoAlias = TextHelper.ToUnsignString(customer.Name);
-            customers.InsertOne(customer);
-            return customer;
+            await  customers.InsertOneAsync(customer);
         }
 
-        public void Update(Customer customer)
+        public async Task Update(Customer customer)
         {
             customer.SeoAlias = TextHelper.ToUnsignString(customer.Name);
-            customers.ReplaceOne(cus => cus.Id == customer.Id , customer);
+            await customers.ReplaceOneAsync(cus => cus.Id == customer.Id , customer);
         }
 
-        public void Remove(Customer customer)
+        public async Task  Remove(Customer customer)
         {
-            customers.DeleteOne(cus => cus.Id == customer.Id);
+            await customers.DeleteOneAsync(cus => cus.Id == customer.Id);
         }
 
-        public void RemoveById(string id)
+        public async Task  RemoveById(string id)
         {
-            customers.DeleteOne(cus => cus.Id == id);
+            await customers.DeleteOneAsync(cus => cus.Id == id);
         }
     }
 }

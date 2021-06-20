@@ -8,7 +8,9 @@ namespace Test1.ViewModel
         public Mapping()
         {
 
-            CreateMap<Customer, CustomerVM>().ReverseMap();
+            CreateMap<Customer, CustomerVM>()
+                /*.ForMember(dest => dest.ProfileImage, act => act.MapFrom(src => src.ImageUrl))*/    
+                .ReverseMap();
             CreateMap<User, UserVM>().ReverseMap();
             CreateMap<User, LoginVM>().ReverseMap();
             CreateMap<Product, ProductVM>().ReverseMap();

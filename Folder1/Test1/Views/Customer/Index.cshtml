@@ -37,7 +37,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
+                @Html.DisplayNameFor(model => model.ProfileImage)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -60,7 +60,8 @@
             <td>
                 @if (item.ImageUrl != null)
                 {
-                    <img src="@Url.Content(item.ImageUrl)" alt="Image" />
+                    @*<img src="@Url.Content(item.ImageUrl)" alt="Image" />*@
+                    <img src="~/images/@item.ImageUrl" asp-append-version="true" alt="Image" />
                 }
             </td>
             <td>
