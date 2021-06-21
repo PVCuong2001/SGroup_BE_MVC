@@ -8,8 +8,9 @@
         
     <!-- Input and Submit elements -->
 
-        <div class="form-horizontal">    
-           <form enctype="multipart/form-data" asp-controller="Customer" asp-action="Create" method="post">     
+<div class="form-horizontal">  
+    @*enctype == content-type*@
+    <form enctype="multipart/form-data" asp-controller="Customer" asp-action="Create" method="post">     
         <hr />    
         <div class="form-group">    
                 @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })    

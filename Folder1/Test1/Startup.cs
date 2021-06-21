@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Test1.Extention.MiddleWare;
+using Test1.Extention.StreamUpload;
 using Test1.Service;
 using Test1.Service.Service_Interface;
 
@@ -28,9 +29,8 @@ namespace Test1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-          
-            
-            services.AddScoped<ICustomerService,CustomerService>();
+            services.AddControllersWithViews();
+         services.AddScoped<ICustomerService,CustomerService>();
             services.AddScoped<IUserService,UserService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ISessionService ,SessionService>();
@@ -52,7 +52,29 @@ namespace Test1
                 options.Cookie.MaxAge = new TimeSpan(0, 5, 0);
                 
             });
-            services.AddControllersWithViews();
+            services.AddRazorPages(options =>
+            {
+                options.Conventions
+                    .AddPageApplicationModelConvention("/StreamedSingleFileUploadDb",
+                        model =>
+                        {
+                            model.Filters.Add(
+                                new GenerateAntiforgeryTokenCookieAttribute());
+                            model.Filters.Add(
+                                new DisableFormValueModelBindingAttribute());
+                        });
+                options.Conventions
+                    .AddPageApplicationModelConvention("/TestUpload",
+                        model =>
+                        {
+                            model.Filters.Add(
+                                new GenerateAntiforgeryTokenCookieAttribute());
+                            model.Filters.Add(
+                                new DisableFormValueModelBindingAttribute());
+                        });
+            });
+            
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,6 +109,7 @@ namespace Test1
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
                 
                 endpoints.MapControllerRoute(
                     name: "customer",

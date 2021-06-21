@@ -1,14 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Net.Http.Headers;
 using MongoDB.Bson.IO;
 using Test1.Extention;
+using Test1.Extention.StreamUpload;
 using Test1.Model;
 using Test1.Service;
 using Test1.Service.Service_Interface;
@@ -17,15 +22,15 @@ using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace Test1.Controllers
 {
-    [Authorize]
+    /*[Authorize]*/
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IMapper _mapper;
-
+        private static readonly FormOptions _defaultFormOptions = new FormOptions();
         public CustomerController(ICustomerService customerService, IMapper mapper,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment )
         {
             _customerService = customerService;
             _webHostEnvironment = webHostEnvironment;
@@ -68,18 +73,20 @@ namespace Test1.Controllers
                 if (list.Count == 0)
                 {
                     string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                    List<string> listImgUrl =await IO_Management.UploadedFile(customerVM,folderPath);
-                    if (listImgUrl ==null)
+                    List<string> listImgUrl = await IO_Management.UploadedFile(customerVM, folderPath);
+                    if (listImgUrl == null)
                     {
                         ModelState.AddModelError("ProfileImage", "Fail to save image ,please save again");
                         return View(customerVM);
                     }
+
                     Customer customer = new Customer();
                     _mapper.Map(customerVM, customer);
                     foreach (var value in listImgUrl)
                     {
                         customer.ListImage.Add(value);
                     }
+
                     await _customerService.Create(customer);
                     return RedirectToAction(nameof(Index));
                 }
@@ -123,12 +130,14 @@ namespace Test1.Controllers
                 if (list.Count == 0)
                 {
                     string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                    string imgUrl = ""; IO_Management.UploadedFile(customerVM,folderPath);
+                    string imgUrl = "";
+                    IO_Management.UploadedFile(customerVM, folderPath);
                     if (imgUrl == "fail")
                     {
                         ModelState.AddModelError("ProfileImage", "Fail to save image ,please save again");
                         return View(customerVM);
                     }
+
                     Customer customer = new Customer();
                     _mapper.Map(customerVM, customer);
                     /*customer.ListImage = imgUrl;*/
@@ -161,13 +170,82 @@ namespace Test1.Controllers
             {
                 listFullPath.Add(Path.Combine(uploadsFolder, value));
             }
+
             await IO_Management.deleteFile(listFullPath);
             await _customerService.RemoveById(id);
             return Ok(1);
         }
 
-        
+        /*[HttpGet]
+        public IActionResult TestUpload()
+        {
+            return View();
+        }*/
 
-        
+        [HttpPost]
+        [DisableFormValueModelBinding]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadPhysical()
+        {
+            if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
+            {
+                ModelState.AddModelError("File",
+                    $"The request couldn't be processed (Error 1).");
+                // Log error
+
+                return BadRequest(ModelState);
+            }
+
+            var boundary = MultipartRequestHelper.GetBoundary(
+                MediaTypeHeaderValue.Parse(Request.ContentType),
+                _defaultFormOptions.MultipartBoundaryLengthLimit);
+            var reader = new MultipartReader(boundary, HttpContext.Request.Body);
+            var section = await reader.ReadNextSectionAsync();
+            Console.WriteLine("oke");
+            while (section != null)
+            {
+                var hasContentDispositionHeader =
+                    ContentDispositionHeaderValue.TryParse(
+                        section.ContentDisposition, out var contentDisposition);
+
+                if (hasContentDispositionHeader)
+                {
+                    if (!MultipartRequestHelper
+                        .HasFileContentDisposition(contentDisposition))
+                    {
+                        ModelState.AddModelError("File",
+                            $"The request couldn't be processed (Error 2).");
+                        // Log error
+                        return BadRequest(ModelState);
+                    }
+                    else
+                    {
+                        var trustedFileNameForDisplay = WebUtility.HtmlEncode(
+                            contentDisposition.FileName.Value);
+                        var fileName = Path.GetRandomFileName();
+                        string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                        var saveToPath = Path.Combine(uploadsFolder, fileName);
+                        if (!ModelState.IsValid)
+                        {
+                            return BadRequest(ModelState);
+                        }
+
+                        using (var targetStream = System.IO.File.Create(
+                            saveToPath))
+                        {
+                            await section.Body.CopyToAsync(targetStream);
+                        }
+                        
+                        return Ok();
+                    }
+                }
+
+                // Drain any remaining section body that hasn't been consumed and
+                // read the headers for the next section.
+                section = await reader.ReadNextSectionAsync();
+            }
+
+            return BadRequest("No files data in the request.");
+        }
     }
 }
