@@ -57,12 +57,12 @@
         </div>  *@  
         
         <div class="form-group">  
-                                    <label asp-for="ProfileImage" class="control-label"></label>  
+                                    <label asp-for="ListFormImage" class="control-label"></label>  
                                     <div class="custom-file">  
-                                        <input asp-for="ProfileImage" class="custom-file-input" id="customFile">  
+                                        <input multiple asp-for="ListFormImage" class="custom-file-input" id="customFile">  
                                         <label class="custom-file-label" for="customFile">Choose file</label>  
                                     </div>  
-                                    <span asp-validation-for="ProfileImage" class="text-danger"></span>  
+                                    <span asp-validation-for="ListFormImage" class="text-danger"></span>  
                                 </div>  
                           <div class="form-group">    
                                               <div class="col-md-offset-2 col-md-10">    
@@ -81,8 +81,16 @@
         <script type="text/javascript">  
         // Add the following code if you want the name of the file appear on select  
         $(".custom-file-input").on("change", function () {  
-            var fileName = $(this).val().split("\\").pop();  
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);  
+            var fileLabel = $(this).next('.custom-file-label');
+            var files = $(this)[0].files;
+            if(files.length>1){
+             fileLabel.html(files.length+' files selected');
+            }else if(files.length==1){
+                fileLabel.html(files[0].name);
+            }
+            
+       /*     var fileName = $(this).val().split("\\").pop();  
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);  */
         });  
     </script>
     }

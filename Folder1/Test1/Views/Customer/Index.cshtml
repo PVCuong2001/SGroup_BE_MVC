@@ -37,7 +37,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProfileImage)
+                @Html.DisplayNameFor(model => model.ListFormImage)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -58,10 +58,14 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @if (item.ImageUrl != null)
+                @if (item.ListImage.Count != 0)
                 {
                     @*<img src="@Url.Content(item.ImageUrl)" alt="Image" />*@
-                    <img src="~/images/@item.ImageUrl" asp-append-version="true" alt="Image" />
+                    @foreach (var img in item.ListImage)
+                    {
+                        <img src="~/images/@img" asp-append-version="true" alt="Image" />
+                    }
+                   
                 }
             </td>
             <td>

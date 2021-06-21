@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Test1.Model;
+using Test1.Service.Service_Interface;
 using Test1.ViewModel;
 namespace Test1.Controllers
 {
@@ -14,14 +15,12 @@ namespace Test1.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
         public IActionResult Index()
         {
-            
             return View();
         }
 

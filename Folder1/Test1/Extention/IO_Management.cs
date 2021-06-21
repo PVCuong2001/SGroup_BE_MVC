@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Test1.ViewModel;
@@ -7,11 +8,11 @@ namespace Test1.Extention
 {
     public class IO_Management
     {
-        public static string UploadedFile(CustomerVM customerVM , string folderPath)
+        public static async Task<List<string>> UploadedFile(CustomerVM customerVM , string folderPath)
         {
-            string uniqueFileName = null;
-            if (customerVM.ProfileImage != null)
+            if (customerVM.ListFormImage != null)
             {
+                List<string>listFileNames = new List<string>();
                 if (!Directory.Exists(folderPath))
                 {
                     try
@@ -21,31 +22,39 @@ namespace Test1.Extention
                     catch (Exception e)
                     {
                         Console.WriteLine("Fail to create Folder");
-                        return "fail";
+                        return null;
                     }
                 }
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + customerVM.ProfileImage.FileName;
-                string filePath = Path.Combine(folderPath, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+
+                foreach (var value in customerVM.ListFormImage)
                 {
-                    customerVM.ProfileImage.CopyTo(fileStream);
+                    string  uniqueFileName = Guid.NewGuid().ToString() + "_" + value.FileName;
+                    string filePath = Path.Combine(folderPath, uniqueFileName);
+                   await value.CopyToAsync(new FileStream(filePath,FileMode.Create));
+                    listFileNames.Add(uniqueFileName);
                 }
+                /*using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    customerVM.ListFormImage.CopyTo(fileStream);
+                }*/
+                return listFileNames;
             }
-            return uniqueFileName;
+            return null;
         }
         
-        public static async Task deleteFile(string fullPath)
+        public static async Task deleteFile(List<string> listFullPath)
         {
             try
             {
-// Check if file exists with its full path    
-                if (System.IO.File.Exists(fullPath))
+                foreach (var fullPath in listFullPath)
                 {
-// If file found, delete it    
-                    System.IO.File.Delete(fullPath);
-                    Console.WriteLine("File deleted.");
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                        Console.WriteLine("File deleted : "+fullPath);
+                    }
+                    else Console.WriteLine("File not found : "+fullPath);
                 }
-                else Console.WriteLine("File not found");
             }
             catch (IOException ioExp)
             {

@@ -68,15 +68,18 @@ namespace Test1.Controllers
                 if (list.Count == 0)
                 {
                     string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                    string imgUrl = IO_Management.UploadedFile(customerVM,folderPath);
-                    if (imgUrl == "fail")
+                    List<string> listImgUrl =await IO_Management.UploadedFile(customerVM,folderPath);
+                    if (listImgUrl ==null)
                     {
                         ModelState.AddModelError("ProfileImage", "Fail to save image ,please save again");
                         return View(customerVM);
                     }
                     Customer customer = new Customer();
                     _mapper.Map(customerVM, customer);
-                    customer.ImageUrl = imgUrl;
+                    foreach (var value in listImgUrl)
+                    {
+                        customer.ListImage.Add(value);
+                    }
                     await _customerService.Create(customer);
                     return RedirectToAction(nameof(Index));
                 }
@@ -120,7 +123,7 @@ namespace Test1.Controllers
                 if (list.Count == 0)
                 {
                     string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                    string imgUrl = IO_Management.UploadedFile(customerVM,folderPath);
+                    string imgUrl = ""; IO_Management.UploadedFile(customerVM,folderPath);
                     if (imgUrl == "fail")
                     {
                         ModelState.AddModelError("ProfileImage", "Fail to save image ,please save again");
@@ -128,7 +131,7 @@ namespace Test1.Controllers
                     }
                     Customer customer = new Customer();
                     _mapper.Map(customerVM, customer);
-                    customer.ImageUrl = imgUrl;
+                    /*customer.ListImage = imgUrl;*/
                     await _customerService.Update(customer);
                     return RedirectToAction(nameof(Index));
                 }
@@ -153,8 +156,12 @@ namespace Test1.Controllers
             string id = JsonConvert.DeserializeObject<string>(data.GetRawText());
             var customer = await _customerService.FindById(id);
             string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-            string fullPath = Path.Combine(uploadsFolder, customer.ImageUrl);
-            await IO_Management.deleteFile(fullPath);
+            List<string> listFullPath = new List<string>();
+            foreach (var value in customer.ListImage)
+            {
+                listFullPath.Add(Path.Combine(uploadsFolder, value));
+            }
+            await IO_Management.deleteFile(listFullPath);
             await _customerService.RemoveById(id);
             return Ok(1);
         }

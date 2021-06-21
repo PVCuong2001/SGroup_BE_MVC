@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
@@ -18,10 +19,10 @@ namespace Test1.ViewModel
         public GenderEnum Gender { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter the address")]
         public string Address { get; set; }
-        public string ImageUrl { get; set; }
+        public List<string> ListImage { get; set; }
         [Required(ErrorMessage = "Please choose profile image")]  
         [Display(Name = "Please enter Pictures")]  
-        public IFormFile ProfileImage { get; set; } 
+        public List<IFormFile> ListFormImage { get; set; } 
         
         
     public enum GenderEnum
