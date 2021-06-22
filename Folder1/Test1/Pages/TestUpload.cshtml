@@ -12,18 +12,26 @@
 
 <p>The following form's <code>action</code> points to a controller endpoint that only receives the file and saves it to disk. If additional form data is added to the form, the additional data is ignored by the controller action.</p>
 
-<form id="uploadForm" action="Customer/UploadPhysical" method="post" 
+<form id="uploadForm" action="Customer/UploadPhysical" method="post"
       enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
+    <div class="form-group">
+                <label for="txtName">Name</label>
+                <input type="text" class="form-control" id="txtName" name="Name">
+            </div>
+            <div class="form-group">
+                <label for="txtAge">Age</label>
+                <input type="text" class="form-control" id="txtAge" name="Age">
+            </div>
     <dl>
         <dt>
             <label for="file">File</label>
         </dt>
         <dd>
-            <input id="file" type="file" name="file" />
+            <input id="file" type="file" name="file"/>
         </dd>
     </dl>
 
-    <input class="btn" type="submit" value="Upload" />
+    <input class="btn" type="submit" value="Upload"/>
 
     <div style="margin-top:15px">
         <output form="uploadForm" name="result"></output>

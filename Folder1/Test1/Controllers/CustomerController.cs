@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
 using MongoDB.Bson.IO;
@@ -29,8 +33,9 @@ namespace Test1.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IMapper _mapper;
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
+
         public CustomerController(ICustomerService customerService, IMapper mapper,
-            IWebHostEnvironment webHostEnvironment )
+            IWebHostEnvironment webHostEnvironment)
         {
             _customerService = customerService;
             _webHostEnvironment = webHostEnvironment;
@@ -81,6 +86,7 @@ namespace Test1.Controllers
                         ModelState.AddModelError("ProfileImage", "Fail to save image ,please save again");
                         return View(customerVM);
                     }
+
                     Customer customer = new Customer();
                     _mapper.Map(customerVM, customer);
                     foreach (var value in listImgUrl)
@@ -190,20 +196,21 @@ namespace Test1.Controllers
         [RequestFormLimits(MultipartBodyLengthLimit = 6000000000)]
         public async Task<IActionResult> UploadPhysical()
         {
-            if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
+            /*if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
             {
                 ModelState.AddModelError("File",
                     $"The request couldn't be processed (Error 1).");
                 // Log error
 
                 return BadRequest(ModelState);
-            }
+            }*/
 
             var boundary = MultipartRequestHelper.GetBoundary(
                 MediaTypeHeaderValue.Parse(Request.ContentType),
                 _defaultFormOptions.MultipartBoundaryLengthLimit);
             var reader = new MultipartReader(boundary, HttpContext.Request.Body);
             var section = await reader.ReadNextSectionAsync();
+            var formAccumelator = new KeyValueAccumulator();
             Console.WriteLine("oke");
             while (section != null)
             {
@@ -213,7 +220,7 @@ namespace Test1.Controllers
 
                 if (hasContentDispositionHeader)
                 {
-                    if (!MultipartRequestHelper
+                    /*if (!MultipartRequestHelper
                         .HasFileContentDisposition(contentDisposition))
                     {
                         ModelState.AddModelError("File",
@@ -221,34 +228,65 @@ namespace Test1.Controllers
                         // Log error
                         return BadRequest(ModelState);
                     }
-                    else
+                    else*/
                     {
-                        var trustedFileNameForDisplay = WebUtility.HtmlEncode(
-                            contentDisposition.FileName.Value);
-                        var fileName = Path.GetRandomFileName();
-                        string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                        var saveToPath = Path.Combine(uploadsFolder, fileName);
-                        if (!ModelState.IsValid)
+                        if (contentDisposition.DispositionType.Equals("form-data") &&
+                            (!string.IsNullOrEmpty(contentDisposition.FileName.Value) ||
+                             !string.IsNullOrEmpty(contentDisposition.FileNameStar.Value)))
                         {
-                            return BadRequest(ModelState);
-                        }
+                            var trustedFileNameForDisplay = WebUtility.HtmlEncode(
+                                contentDisposition.FileName.Value);
+                            var fileName = Path.GetRandomFileName();
+                            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                            var saveToPath = Path.Combine(uploadsFolder, fileName);
+                            if (!ModelState.IsValid)
+                            {
+                                return BadRequest(ModelState);
+                            }
 
-                        using (var targetStream = System.IO.File.Create(
-                            saveToPath))
-                        {
-                            await section.Body.CopyToAsync(targetStream);
+                            using (var targetStream = System.IO.File.Create(
+                                saveToPath))
+                            {
+                                await section.Body.CopyToAsync(targetStream);
+                            }
                         }
-                        
-                        return Ok();
+                        else
+                        {
+                            var key = HeaderUtilities.RemoveQuotes(contentDisposition.Name).Value;
+                            using (var streamReader = new StreamReader(section.Body,
+                                encoding: Encoding.UTF8,
+                                detectEncodingFromByteOrderMarks: true,
+                                bufferSize: 1024,
+                                leaveOpen: true))
+                            {
+                                var value = await streamReader.ReadToEndAsync();
+                                if (string.Equals(value, "undefined", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    value = string.Empty;
+                                }
+                                formAccumelator.Append(key, value);
+                            }
+                        }
                     }
-                }
 
-                // Drain any remaining section body that hasn't been consumed and
-                // read the headers for the next section.
+                    // Drain any remaining section body that hasn't been consumed and
+                    // read the headers for the next section.
+                }
                 section = await reader.ReadNextSectionAsync();
             }
 
-            return BadRequest("No files data in the request.");
+            var profile = new TestHello();
+                var formValueProvidere = new FormValueProvider(
+                    BindingSource.Form,
+                    new FormCollection(formAccumelator.GetResults()),
+                    CultureInfo.CurrentCulture
+                );
+
+                var bindindSuccessfully = await TryUpdateModelAsync(profile, "", formValueProvidere);
+                if (ModelState.IsValid)
+                {
+                }
+                return Content("Uploaded successfully");
         }
     }
 }
