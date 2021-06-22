@@ -65,6 +65,8 @@ namespace Test1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RequestSizeLimit(6000000000)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 6000000000)]
         public async Task<IActionResult> Create(CustomerVM customerVM)
         {
             if (ModelState.IsValid)
@@ -79,7 +81,6 @@ namespace Test1.Controllers
                         ModelState.AddModelError("ProfileImage", "Fail to save image ,please save again");
                         return View(customerVM);
                     }
-
                     Customer customer = new Customer();
                     _mapper.Map(customerVM, customer);
                     foreach (var value in listImgUrl)
@@ -185,6 +186,8 @@ namespace Test1.Controllers
         [HttpPost]
         [DisableFormValueModelBinding]
         [ValidateAntiForgeryToken]
+        [RequestSizeLimit(6000000000)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 6000000000)]
         public async Task<IActionResult> UploadPhysical()
         {
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
