@@ -41,8 +41,12 @@
               <a asp-controller="Product" asp-action="/@item.SeoAlias-c.@item.Id" methods="get">Detail</a> |
                 
                  
-                <a onclick="return confirm('Are you sure you want to delete')" asp-controller="Customer"
-                   asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @*<a onclick="return confirm('Are you sure you want to delete')" asp-controller="Customer"
+                   asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                 <form asp-action="Delete" asp-route-id="@item.Id" onsubmit="return jQueryAjaxDelete(this);">
+                                  <input type="submit" value="Delete" class ="btn btn-danger"/>
+                                                
+                                    </form>
             </td>
         </tr>
     }

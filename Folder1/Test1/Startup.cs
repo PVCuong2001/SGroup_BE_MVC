@@ -65,7 +65,7 @@ namespace Test1
                                 new DisableFormValueModelBindingAttribute());
                         });
                 options.Conventions
-                    .AddPageApplicationModelConvention("/TestUpload",
+                    .AddPageApplicationModelConvention("/User/Create",
                         model =>
                         {
                             model.Filters.Add(

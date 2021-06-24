@@ -26,7 +26,7 @@ using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace Test1.Controllers
 {
-    /*[Authorize]*/
+    [Authorize]
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;
@@ -189,104 +189,6 @@ namespace Test1.Controllers
             return View();
         }*/
 
-        [HttpPost]
-        [DisableFormValueModelBinding]
-        [ValidateAntiForgeryToken]
-        [RequestSizeLimit(6000000000)]
-        [RequestFormLimits(MultipartBodyLengthLimit = 6000000000)]
-        public async Task<IActionResult> UploadPhysical()
-        {
-            /*if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
-            {
-                ModelState.AddModelError("File",
-                    $"The request couldn't be processed (Error 1).");
-                // Log error
-
-                return BadRequest(ModelState);
-            }*/
-
-            var boundary = MultipartRequestHelper.GetBoundary(
-                MediaTypeHeaderValue.Parse(Request.ContentType),
-                _defaultFormOptions.MultipartBoundaryLengthLimit);
-            var reader = new MultipartReader(boundary, HttpContext.Request.Body);
-            var section = await reader.ReadNextSectionAsync();
-            var formAccumelator = new KeyValueAccumulator();
-            Console.WriteLine("oke");
-            while (section != null)
-            {
-                var hasContentDispositionHeader =
-                    ContentDispositionHeaderValue.TryParse(
-                        section.ContentDisposition, out var contentDisposition);
-
-                if (hasContentDispositionHeader)
-                {
-                    /*if (!MultipartRequestHelper
-                        .HasFileContentDisposition(contentDisposition))
-                    {
-                        ModelState.AddModelError("File",
-                            $"The request couldn't be processed (Error 2).");
-                        // Log error
-                        return BadRequest(ModelState);
-                    }
-                    else*/
-                    {
-                        if (contentDisposition.DispositionType.Equals("form-data") &&
-                            (!string.IsNullOrEmpty(contentDisposition.FileName.Value) ||
-                             !string.IsNullOrEmpty(contentDisposition.FileNameStar.Value)))
-                        {
-                            var trustedFileNameForDisplay = WebUtility.HtmlEncode(
-                                contentDisposition.FileName.Value);
-                            var fileName = Path.GetRandomFileName();
-                            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                            var saveToPath = Path.Combine(uploadsFolder, fileName);
-                            if (!ModelState.IsValid)
-                            {
-                                return BadRequest(ModelState);
-                            }
-
-                            using (var targetStream = System.IO.File.Create(
-                                saveToPath))
-                            {
-                                await section.Body.CopyToAsync(targetStream);
-                            }
-                        }
-                        else
-                        {
-                            var key = HeaderUtilities.RemoveQuotes(contentDisposition.Name).Value;
-                            using (var streamReader = new StreamReader(section.Body,
-                                encoding: Encoding.UTF8,
-                                detectEncodingFromByteOrderMarks: true,
-                                bufferSize: 1024,
-                                leaveOpen: true))
-                            {
-                                var value = await streamReader.ReadToEndAsync();
-                                if (string.Equals(value, "undefined", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    value = string.Empty;
-                                }
-                                formAccumelator.Append(key, value);
-                            }
-                        }
-                    }
-
-                    // Drain any remaining section body that hasn't been consumed and
-                    // read the headers for the next section.
-                }
-                section = await reader.ReadNextSectionAsync();
-            }
-
-            var profile = new TestHello();
-                var formValueProvidere = new FormValueProvider(
-                    BindingSource.Form,
-                    new FormCollection(formAccumelator.GetResults()),
-                    CultureInfo.CurrentCulture
-                );
-
-                var bindindSuccessfully = await TryUpdateModelAsync(profile, "", formValueProvidere);
-                if (ModelState.IsValid)
-                {
-                }
-                return Content("Uploaded successfully");
-        }
+       
     }
 }

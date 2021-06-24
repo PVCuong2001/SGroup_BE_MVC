@@ -42,6 +42,25 @@ jQueryAjaxPost = form => {
     return false;
 }
 
+jQueryAjaxDelete = form => {
+    console.log(form.action)
+    $.ajax({
+        type: "POST",
+        contentType: false,
+        data: new FormData(form),
+        url: form.action,
+        processData: false,
+        success: function (res) {
+            $("#view-all").html(res.html);
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    })
+    return false;
+}
+
+
 function ValidateEmail() {
     let form =  $("#loginForm");
     let emaill = $("#gmail").val();

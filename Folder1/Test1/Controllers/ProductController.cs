@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Test1.Extention;
@@ -57,7 +58,7 @@ namespace Test1.Controllers
                 Product product = new Product();
                 _mapper.Map(productVm, product);
                 Console.WriteLine("before update or create");
-                if (productVm.Id == "")
+                if (productVm.Id == "" || productVm.Id ==null)
                 {
                     _productService.Create(product);
                 }
@@ -70,64 +71,14 @@ namespace Test1.Controllers
             }
            return Json(new {isValid =false , html = RazorHelper.RenderRazorViewToString(this,"AddOrEdit",productVm)});
         }
-        
-        /*
-        [HttpPost]
+
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ProductVM customerVM)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            Customer customer = new Customer();
-            _mapper.Map(customerVM, customer);
-            if (ModelState.IsValid)
-            {
-                _customerService.Create(customer);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(customerVM);
+            _productService.RemoveById(id);
+            return Json(new
+                {html = RazorHelper.RenderRazorViewToString(this, "_ViewAll", _productService.Get("", ""))});
         }
-        
-        [HttpGet]
-        [Route("/Customer/{alias}-c.{id}")]
-        public IActionResult Detail(string id){
-            Console.WriteLine("sadasdasdas");
-            Console.WriteLine(id);
-            Customer customer =  _customerService.FindById(id);
-            CustomerVM customerVm = _mapper.Map<CustomerVM>(customer);
-            return View (customerVm);
-        }
-        
-
-         [HttpGet]
-         [Route("/Customer/Edit/{id?}")]
-         public IActionResult Edit(string id){
-             Customer customer =  _customerService.FindById(id);
-            CustomerVM customerVm = _mapper.Map<CustomerVM>(customer);
-             return View (customerVm);
-         }
-
-
-        [HttpPost]  
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(CustomerVM customerVM)
-        {
-            if (ModelState.IsValid)
-            {
-                Customer customer = new Customer();
-                _mapper.Map(customerVM, customer);
-                _customerService.Update(customer);
-                return Redirect("/Customer/Search");
-            }
-            return View(customerVM);
-         
-        }
-
-        [HttpGet]
-        public IActionResult Delete(string id){
-            _customerService.Remove(id);
-              return RedirectToAction(actionName: "Index", controllerName: "Customer");
-        }
-        */
-
-        
     }
     }

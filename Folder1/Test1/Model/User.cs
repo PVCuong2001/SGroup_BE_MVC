@@ -28,5 +28,10 @@ namespace Test1.Model
         [Required]
         public string ImageUrl { get; set; }
         
+        [BsonElement("AboutYourSelf")]
+        [Required]
+        [DataType(DataType.Url)]
+        public string AboutYourSelf { get; set; }
+        
     }
 }
