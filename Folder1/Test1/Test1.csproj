@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-     
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+<AssemblyName>DockerTest1</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
