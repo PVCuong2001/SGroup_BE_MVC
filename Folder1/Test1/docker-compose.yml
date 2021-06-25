@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+    mongo : 
+        image : mongo
+        restart: always
+        ports: ["30017-30019:27019"]
+        container_name: mongodbtest
+        hostname: mongodbtest
+        volumes: 
+            - mongo_store:/home/cuong/NET CORE/Folder1/Test1/Data
+    store_management : 
+        build : .
+        ports:  ["5001:80"]
+        environment: 
+            mongoHost: mongoHost
+        depends_on: 
+            - mongo
+volumes: 
+    mongo_store: 
