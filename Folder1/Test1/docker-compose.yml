@@ -3,7 +3,7 @@ services:
     mongo : 
         image : mongo
         restart: always
-        ports: ["30017-30019:27019"]
+        ports: ["30017-30019:27017-27019"]
         container_name: mongodbtest
         hostname: mongodbtest
         volumes: 

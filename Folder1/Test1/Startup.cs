@@ -56,15 +56,6 @@ namespace Test1
             services.AddRazorPages(options =>
             {
                 options.Conventions
-                    .AddPageApplicationModelConvention("/StreamedSingleFileUploadDb",
-                        model =>
-                        {
-                            model.Filters.Add(
-                                new GenerateAntiforgeryTokenCookieAttribute());
-                            model.Filters.Add(
-                                new DisableFormValueModelBindingAttribute());
-                        });
-                options.Conventions
                     .AddPageApplicationModelConvention("/User/Create",
                         model =>
                         {
