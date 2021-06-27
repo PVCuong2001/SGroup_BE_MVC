@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -11,6 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
+using Test1.Extention.Enum;
 using Test1.Extention.StreamUpload;
 using Test1.Service.Service_Interface;
 using Test1.ViewModel;
@@ -23,18 +28,77 @@ namespace Test1.Controllers
         private readonly IUserService _userService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
-        public UserController(IUserService userService , IWebHostEnvironment webHostEnvironment )
+        
+        /// <summary>
+        /// Cloudinary
+        /// </summary>
+        private readonly Cloudinary _cloudinary;
+        public const string Tags = "direct_PhotoAlbum";
+         private const string FolderName = "preset_folder";
+        public DirectUploadType DirectUploadType { get; set; }
+        public string Preset { get; set; }
+        public UserController(IUserService userService , IWebHostEnvironment webHostEnvironment ,Cloudinary cloudinary)
         {
             _userService = userService;
             _webHostEnvironment = webHostEnvironment;
+            _cloudinary = cloudinary;
         }
         // GET
         /*public IActionResult Index()
         {
             return View();
         }*/
+
+        [HttpGet]
+        public async Task<IActionResult> CreateCloudinary(DirectUploadType type)
+        {
+            DirectUploadType = type;
+
+            if (DirectUploadType == DirectUploadType.Signed) return View();
+
+            Preset = $"sample_{_cloudinary.Api.SignParameters(new SortedDictionary<string, object> { { "api_key", _cloudinary.Api.Account.ApiKey } }).Substring(0, 10)}";
+
+            await _cloudinary.CreateUploadPresetAsync(new UploadPresetParams
+            {
+                Name = Preset,
+                Unsigned = true,
+                Folder = FolderName
+            }).ConfigureAwait(false);
+            return View();
+        }
         
+        [HttpPost]
+        public async Task<IActionResult>CreateCloudinary(){
+            string content = null;
+            using (var reader = new StreamReader(HttpContext.Request.Body))
+            {
+                content = await reader.ReadToEndAsync().ConfigureAwait(false);
+            }
+
+            if (string.IsNullOrEmpty(content)) return View();
+
+            var parsedResult = JsonConvert.DeserializeObject<ImageUploadResult>(content);
+            IFormatProvider provider = CultureInfo.CreateSpecificCulture("en-US");
+            var testHello = new TestHello
+            {
+                CreatedAt = parsedResult.CreatedAt.ToString(),
+                Format = parsedResult.Format,
+                Height = parsedResult.Height.ToString(),
+                PublicId = parsedResult.PublicId,
+                ResourceType = parsedResult.ResourceType,
+                SecureUrl = parsedResult.SecureUrl.ToString(),
+                Signature = parsedResult.Signature,
+                Type = parsedResult.Type,
+                Url = parsedResult.Url.ToString(),
+                Version = int.Parse(parsedResult.Version, provider),
+                Width = parsedResult.Width.ToString()
+            };
+            Console.WriteLine(testHello.ToString());
+            return Redirect("/");
         
+        }
+
+
          [HttpPost]
          [DisableFormValueModelBinding]
         [ValidateAntiForgeryToken]

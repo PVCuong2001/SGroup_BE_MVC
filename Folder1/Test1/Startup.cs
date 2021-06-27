@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -70,6 +71,17 @@ namespace Test1
             {
                 options.MultipartBodyLengthLimit = 6000000000;
             });
+            
+            ////////////CLOUDINARY/////////////
+            var cloudName = Configuration.GetValue<string>("AccountSettings:CloudName");
+            var apiKey = Configuration.GetValue<string>("AccountSettings:ApiKey");
+            var apiSecret = Configuration.GetValue<string>("AccountSettings:ApiSecret");
+
+            if (new[] { cloudName, apiKey, apiSecret }.Any(string.IsNullOrWhiteSpace))
+            {
+                throw new ArgumentException("Please specify Cloudinary account details!");
+            }
+            services.AddSingleton(new Cloudinary(new Account(cloudName, apiKey, apiSecret)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

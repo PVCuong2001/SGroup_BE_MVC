@@ -9,9 +9,17 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.15.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.15" />
     <PackageReference Include="MongoDB.Driver" Version="2.12.3" />
+  </ItemGroup>
+
+<ItemGroup>
+    <None Include="wwwroot\js\Cloudinary\jquery.cloudinary.js" />
+    <None Include="wwwroot\js\Cloudinary\jquery.fileupload.js" />
+    <None Include="wwwroot\js\Cloudinary\jquery.iframe-transport.js" />
+    <None Include="wwwroot\js\Cloudinary\jquery.ui.widget.js" />
   </ItemGroup>
 
   <ItemGroup>
