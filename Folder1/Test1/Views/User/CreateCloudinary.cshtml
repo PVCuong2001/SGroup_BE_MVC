@@ -1,9 +1,8 @@
 @using CloudinaryDotNet
 @using Test1.Extention.Enum
-
+@inject Cloudinary cloudinary
 @{
     ViewData["Title"] = "PhotoAlbum - Direct Upload page";
-    var cloudinary = new Cloudinary();
 }
 
 <!-- A form for direct uploading using a jQuery plug-in.
@@ -14,13 +13,13 @@ allow uploading directly from the browser to your Cloudinary account -->
     <form>
         @Html.AntiForgeryToken()
 
-        @if (Model.DirectUploadType == DirectUploadType.Signed)
+        @if ( (DirectUploadType)ViewData["Type"] == DirectUploadType.Signed)
         {
             @Html.Raw(cloudinary.Api.BuildUploadForm("test-field", "auto", new SortedDictionary<string, object> { { "tags", "direct_upload"} }, new Dictionary<string, string> { { "multiple", "true" } }))
         }
         else
         {
-            @Html.Raw(cloudinary.Api.BuildUnsignedUploadForm("test-field", Model.Preset, "image", new SortedDictionary<string, object> { { "tags","indirect" } }, new Dictionary<string, string> { { "multiple", "true" } }))
+            @Html.Raw(cloudinary.Api.BuildUnsignedUploadForm("test-field", (string)ViewData["Preset"], "image", new SortedDictionary<string, object> { { "tags","indirect" } }, new Dictionary<string, string> { { "multiple", "true" } }))
         }
     </form>
 
@@ -34,12 +33,22 @@ allow uploading directly from the browser to your Cloudinary account -->
     </div>
 </div>
 
-<a asp-page="Index" class="back_link">Back to list...</a>
+
 
 @section Scripts{
-    @Html.Raw(cloudinary.GetCloudinaryJsConfig(dir: "js"))
-
-<script>
+    @Html.Raw(cloudinary.GetCloudinaryJsConfig(false,@"/js/Cloudinary"))
+    
+    @*<script src="@Url.Content("~/js/Cloudinary/jquery.ui.widget.js")"></script>
+    <script src="@Url.Content("~/js/Cloudinary/jquery.iframe-transport.js")"></script>
+    <script src="@Url.Content("~/js/Cloudinary/jquery.fileupload.js")"></script>
+    <script src="@Url.Content("~/js/Cloudinary/jquery.cloudinary.js")"></script>
+    <script src="@Url.Content("~/js/Cloudinary/canvas-to-blob.min.js")"></script>
+    <script src="@Url.Content("~/js/Cloudinary/jquery.fileupload-image.js")"></script>
+    <script src="@Url.Content("~/js/Cloudinary/jquery.fileupload-process.js")"></script>
+    <script src="@Url.Content("~/js/Cloudinary/jquery.fileupload-validate.js")"></script>
+     <script src="@Url.Content("~/js/Cloudinary/load-image.all.min.js")"></script>*@
+    
+    <script>
     $(function () {
             function prettydump(obj) {
                 ret = ""

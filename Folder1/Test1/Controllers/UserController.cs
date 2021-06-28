@@ -52,12 +52,17 @@ namespace Test1.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateCloudinary(DirectUploadType type)
         {
-            DirectUploadType = type;
+            /*DirectUploadType = type;
 
-            if (DirectUploadType == DirectUploadType.Signed) return View();
+            if (DirectUploadType == DirectUploadType.Signed) return View();*/
+            if (type == DirectUploadType.Signed)
+            {
+                ViewData["Type"] = DirectUploadType.Signed;
+                return View();
+            }else   ViewData["Type"] = DirectUploadType.Unsigned;
 
-            Preset = $"sample_{_cloudinary.Api.SignParameters(new SortedDictionary<string, object> { { "api_key", _cloudinary.Api.Account.ApiKey } }).Substring(0, 10)}";
-
+           // Preset = $"sample_{_cloudinary.Api.SignParameters(new SortedDictionary<string, object> { { "api_key", _cloudinary.Api.Account.ApiKey } }).Substring(0, 10)}";
+            ViewData["Preset"] = $"sample_{_cloudinary.Api.SignParameters(new SortedDictionary<string, object> { { "api_key", _cloudinary.Api.Account.ApiKey } }).Substring(0, 10)}";
             await _cloudinary.CreateUploadPresetAsync(new UploadPresetParams
             {
                 Name = Preset,
@@ -95,7 +100,6 @@ namespace Test1.Controllers
             };
             Console.WriteLine(testHello.ToString());
             return Redirect("/");
-        
         }
 
 
