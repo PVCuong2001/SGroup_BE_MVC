@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +18,7 @@ using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Test1.Extention.Enum;
 using Test1.Extention.StreamUpload;
+using Test1.Model;
 using Test1.Service.Service_Interface;
 using Test1.ViewModel;
 
@@ -33,15 +35,14 @@ namespace Test1.Controllers
         /// Cloudinary
         /// </summary>
         private readonly Cloudinary _cloudinary;
-        public const string Tags = "direct_PhotoAlbum";
-         private const string FolderName = "preset_folder";
         public DirectUploadType DirectUploadType { get; set; }
-        public string Preset { get; set; }
-        public UserController(IUserService userService , IWebHostEnvironment webHostEnvironment ,Cloudinary cloudinary)
+        private readonly IMapper _mapper;
+        public UserController(IUserService userService , IWebHostEnvironment webHostEnvironment ,Cloudinary cloudinary,IMapper mapper)
         {
             _userService = userService;
             _webHostEnvironment = webHostEnvironment;
             _cloudinary = cloudinary;
+            _mapper = mapper;
         }
         // GET
         /*public IActionResult Index()
@@ -52,56 +53,45 @@ namespace Test1.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateCloudinary(DirectUploadType type)
         {
-            /*DirectUploadType = type;
-
-            if (DirectUploadType == DirectUploadType.Signed) return View();*/
-            if (type == DirectUploadType.Signed)
+            if (type == DirectUploadType.Unsigned)
             {
-                ViewData["Type"] = DirectUploadType.Signed;
+                ViewData["Type"] = DirectUploadType.Unsigned;
                 return View();
-            }else   ViewData["Type"] = DirectUploadType.Unsigned;
-
-           // Preset = $"sample_{_cloudinary.Api.SignParameters(new SortedDictionary<string, object> { { "api_key", _cloudinary.Api.Account.ApiKey } }).Substring(0, 10)}";
+            }else   ViewData["Type"] = DirectUploadType.Signed;
             ViewData["Preset"] = $"sample_{_cloudinary.Api.SignParameters(new SortedDictionary<string, object> { { "api_key", _cloudinary.Api.Account.ApiKey } }).Substring(0, 10)}";
             await _cloudinary.CreateUploadPresetAsync(new UploadPresetParams
             {
-                Name = Preset,
+                Name = (string)ViewData["Preset"],
                 Unsigned = true,
-                Folder = FolderName
+                Folder = "Images"
             }).ConfigureAwait(false);
             return View();
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult>CreateCloudinary(){
-            string content = null;
-            using (var reader = new StreamReader(HttpContext.Request.Body))
+        public async Task<IActionResult> AddOrUpdate(UserVM userVM)
+        {
+            if (ModelState.IsValid)
             {
-                content = await reader.ReadToEndAsync().ConfigureAwait(false);
+                User user = new User();
+                _mapper.Map(userVM, user);
+                user.AboutYourSelf = "none";
+                if (userVM.Id == "" || userVM.Id ==null)
+                {
+                    await _userService.addUser(user);
+                }
+                else
+                {
+                    await _userService.updateUser(user);
+                }
+                return Json(new { success = true, responseText= "Your message successfuly sent!"});
             }
 
-            if (string.IsNullOrEmpty(content)) return View();
+            return Json(new { success = false, responseText= "Your Data aren't valid"});
 
-            var parsedResult = JsonConvert.DeserializeObject<ImageUploadResult>(content);
-            IFormatProvider provider = CultureInfo.CreateSpecificCulture("en-US");
-            var testHello = new TestHello
-            {
-                CreatedAt = parsedResult.CreatedAt.ToString(),
-                Format = parsedResult.Format,
-                Height = parsedResult.Height.ToString(),
-                PublicId = parsedResult.PublicId,
-                ResourceType = parsedResult.ResourceType,
-                SecureUrl = parsedResult.SecureUrl.ToString(),
-                Signature = parsedResult.Signature,
-                Type = parsedResult.Type,
-                Url = parsedResult.Url.ToString(),
-                Version = int.Parse(parsedResult.Version, provider),
-                Width = parsedResult.Width.ToString()
-            };
-            Console.WriteLine(testHello.ToString());
-            return Redirect("/");
         }
-
+        
+      
 
          [HttpPost]
          [DisableFormValueModelBinding]
@@ -184,7 +174,7 @@ namespace Test1.Controllers
                 section = await reader.ReadNextSectionAsync();
             }
 
-            var profile = new TestHello();
+            var profile = new TestStream();
                 var formValueProvidere = new FormValueProvider(
                     BindingSource.Form,
                     new FormCollection(formAccumelator.GetResults()),

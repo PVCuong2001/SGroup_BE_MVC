@@ -48,16 +48,16 @@ namespace Test1.Service
             return users.Find(x => x.Id == id).SingleOrDefault();
         }
 
-        public void addUser(User user)
+        public async Task addUser(User user)
         {
             user.Password = Md5.CreateMD5Hash(user.Password);
-            users.InsertOne(user);
+            await users.InsertOneAsync(user);
         }
 
-        public void updateUser(User user)
+        public async Task updateUser(User user)
         {
             user.Password = Md5.CreateMD5Hash(user.Password);
-            users.ReplaceOne(x => x.Id == user.Id, user);
+            await users.ReplaceOneAsync(x => x.Id == user.Id, user);
         }
     }
 }
