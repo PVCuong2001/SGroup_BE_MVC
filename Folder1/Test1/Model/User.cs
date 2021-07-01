@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -24,9 +25,8 @@ namespace Test1.Model
         
         [BsonElement("ImageUrl")]
         [Display(Name = "Photo")]
-        [DataType(DataType.ImageUrl)]
         [Required]
-        public string ImageUrl { get; set; }
+        public Image Photo { get; set; }
         
         [BsonElement("AboutYourSelf")]
         [Required]

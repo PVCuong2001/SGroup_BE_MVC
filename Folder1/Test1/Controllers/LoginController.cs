@@ -36,7 +36,7 @@ namespace Test1.Controllers
                 new Claim(ClaimTypes.Name, user.Name),  
                 new Claim(ClaimTypes.Email, user.Gmail),
                 new Claim(ClaimTypes.Thumbprint , user.Id),
-                new Claim(ClaimTypes.Uri,user.ImageUrl)
+                new Claim(ClaimTypes.Uri,user.Photo.ImageUrl)
             };  
   
             //     var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");  

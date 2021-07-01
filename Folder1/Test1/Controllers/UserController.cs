@@ -53,6 +53,7 @@ namespace Test1.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateCloudinary(DirectUploadType type)
         {
+            ViewData["ImageCheck"] = false;
             if (type == DirectUploadType.Unsigned)
             {
                 ViewData["Type"] = DirectUploadType.Unsigned;

@@ -12,6 +12,6 @@ namespace Test1.ViewModel
         public string Password { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter the gmail")]
         public string Gmail { get; set; }
-        public string ImageUrl { get; set; }
+        public ImageVM Photo { get; set; }
     }
 }

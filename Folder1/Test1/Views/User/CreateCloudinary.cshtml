@@ -1,9 +1,11 @@
 @using CloudinaryDotNet
+@using CloudinaryDotNet.Actions
 @using Test1.Extention.Enum
 @inject Cloudinary cloudinary
 @model Test1.ViewModel.UserVM
 @{
     ViewData["Title"] = "PhotoAlbum - Direct Upload page";
+    var imageCheck =(bool) ViewData["ImageCheck"];
 }
 
 <!-- A form for direct uploading using a jQuery plug-in.
@@ -41,17 +43,28 @@ allow uploading directly from the browser to your Cloudinary account -->
         </div>
         
         
-        <input type="hidden" asp-for="@Model.ImageUrl" id="image_url"/>
+        <input type="hidden" asp-for="@Model.Photo.PublicId" id="photoId"/>
+            <input type="hidden" asp-for="@Model.Photo.ImageUrl" id="photoUrl"/>
         <div id="direct_upload">
             <div>
                 @Html.AntiForgeryToken()
 
                 @if ((DirectUploadType) ViewData["Type"] != DirectUploadType.Signed)
                 {
+                    if (@Model.Photo.PublicId != null || @Model.Photo.PublicId != "")
+                    {
+                        var deletionParams = new DeletionParams(@Model.Photo.PublicId);
+                        var deletionResult = await cloudinary.DestroyAsync(deletionParams);
+                    }
                     @Html.Raw(cloudinary.Api.BuildUploadForm("test-field", "auto", new SortedDictionary<string, object> {{"tags", "direct_upload"}}, new Dictionary<string, string> {{"multiple", "true"}}))
                 }
                 else
                 {
+                    if (imageCheck)
+                    {
+                        var deletionParams = new DeletionParams(@Model.Photo.PublicId);
+                        var deletionResult = await cloudinary.DestroyAsync(deletionParams);
+                    }
                     @Html.Raw(cloudinary.Api.BuildUnsignedUploadForm("test-field", (string) ViewData["Preset"], "auto", new SortedDictionary<string, object> {{"tags", "indirect"}}, new Dictionary<string, string> {{"multiple", "true"}}))
                 }
             </div>

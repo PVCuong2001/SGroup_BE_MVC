@@ -9,8 +9,12 @@ $(function () {
         },
     })
         .bind('fileuploaddone', function (e, data) {
-            $('#image_url').val(data.result.url);
-            console.log($('#image_url').val());
+            
+            $('#photoUrl').val(data.result.url);
+            $('#photoId').val(data.result.public_id);
+            imageCheck = true;
+            console.log($('#photoUrl').val());
+            console.log($('#photoId').val());
             $('.status_value').text('Idle');
             var info = $('<div class="uploaded_info"/>');
             $(info).append($('<div class="image"/>').append(
