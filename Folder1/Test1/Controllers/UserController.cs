@@ -49,7 +49,7 @@ namespace Test1.Controllers
         {
             return View();
         }*/
-
+            
         [HttpGet]
         public async Task<IActionResult> CreateCloudinary(DirectUploadType type)
         {

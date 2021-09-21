@@ -26,7 +26,7 @@ using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace Test1.Controllers
 {
-    [Authorize]
+    // [Authorize]
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;

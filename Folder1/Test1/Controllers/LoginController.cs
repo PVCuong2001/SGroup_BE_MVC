@@ -62,6 +62,12 @@ namespace Test1.Controllers
             return View();
         }
         
+        [HttpGet]
+        public IActionResult LoginForAdmin()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async  Task<IActionResult> CheckLogin(LoginVM loginVm)
